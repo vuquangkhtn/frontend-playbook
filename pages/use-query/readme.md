@@ -1,0 +1,33 @@
+# Use Query
+
+Implement a useQuery hook that manages a promise resolution which can be used to fetch data.
+
+
+export default function Component({ param }) {
+  const request = useQuery(async () => {
+    const response = await getDataFromServer(param);
+    return response.data;
+  }, [param]);
+
+  return (
+    <div>
+      {request.loading && <p>Loading...</p>}
+      {request.error && <p>Error: {request.error.message}</p>}
+      {request.data && <p>Data: {request.data}</p>}
+    </div>
+  );
+}
+Arguments
+fn: () => Promise: A function that returns a promise
+deps: DependencyList: An array of dependencies, similar to the second argument of useEffect. Unlike useEffect, this defaults to []
+Returns
+The hook returns an object that has different properties depending on the state of the promise.
+
+Pending:
+status: 'loading': The promise is still pending
+Rejected:
+status: 'error': The promise was rejected
+error: Error: The error that caused the promise to be rejected
+Fulfilled:
+status: 'success': The promise was resolved
+data: The data resolved by the promise returned by fn

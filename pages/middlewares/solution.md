@@ -1,0 +1,155 @@
+Solution
+This problem is about function composition with control handed off via a next() callback. The key idea is recursion:
+
+Each middleware gets called with a next() function
+When next() is invoked, it should move to the next middleware in the chain
+This recursion needs to be asynchronous to support await statements inside each middleware
+A for loop cannot be used because we need to await each layer's completion before continuing. Only recursion or a controlled next chain can model this kind of control flow.
+
+Step 1: Wrapper function
+Define a function middlewares(...fns) that accepts any number of middleware functions and returns a composed callable function. This function accepts the context.
+
+
+function middlewares(...fns) {
+  return async function(context = {}) {
+    ...
+  };
+}
+Step 2: Recursive execution
+This recursive function is responsible for executing each middleware in order.
+
+
+async function execute(index) {
+  if (index === fns.length) {
+    return;
+  }
+
+  const fn = fns[index];
+  await fn(context, () => execute(index + 1));
+}
+index tracks the position in the middleware chain
+We stop when we reach the end of the chain
+Each fn is called with the current context and a next() function, which calls execute(index + 1)
+This allows await next() to pause execution of the current middleware until all downstream middlewares have completed.
+
+Step 3: Start the chain
+Kick off the middleware chain by calling execute(0) inside the returned function.
+
+
+await execute(0);
+Example walkthrough
+
+// stack = []
+
+fn1 => push "fn1-start"
+       await next()
+         ↳ fn2 => push "fn2-start"
+                  await delay
+                  await next()
+                    ↳ fn3 => push "fn3-start"
+                             next()
+                             push "fn3-end"
+                  push "fn2-end"
+       push "fn1-end"
+
+// Final stack:
+['fn1-start', 'fn2-start', 'fn3-start', 'fn3-end', 'fn2-end', 'fn1-end']
+Here is the full solution:
+
+
+Open files in workspace
+
+type MiddlewareFn =
+  | ((context: any, next: () => Promise<void>) => Promise<void>)
+  | ((context: any, next: () => Promise<void>) => void);
+
+export default function middlewares(
+  ...fns: Array<MiddlewareFn>
+): (context?: any) => Promise<void> {
+  return async function (context = {}) {
+    async function execute(index: number): Promise<void> {
+      if (index === fns.length) {
+        return;
+      }
+
+      const fn = fns[index];
+      await fn(context, () => execute(index + 1));
+    }
+
+    await execute(0);
+  };
+}
+Note: index should not be defined as a variable outside of the returned function otherwise all invocations of the returned function will reference the same index value and the function can only be called once.
+
+The code below uses a shared index and fails some test cases:
+
+
+type MiddlewareFn =
+  | ((context: any, next: () => Promise<void>) => Promise<void>)
+  | ((context: any, next: () => Promise<void>) => void);
+
+export default function middlewares(
+  ...fns: Array<MiddlewareFn>
+): (context?: any) => Promise<void> {
+  let index = 0; // WRONG: All function invocations share this index
+
+  return async function (context = {}) {
+    async function execute(): Promise<void> {
+      if (index === fns.length) {
+        return;
+      }
+
+      const fn = fns[index];
+      await fn(context, () => {
+        index++;
+        execute();
+      });
+    }
+
+    await execute();
+  };
+}
+Alternative approach: using promises only
+The following solution does not use async/await.
+
+
+Open files in workspace
+
+type MiddlewareFn =
+  | ((context: any, next: () => Promise<void>) => Promise<void>)
+  | ((context: any, next: () => Promise<void>) => void);
+
+export default function middlewares(
+  ...fns: Array<MiddlewareFn>
+): (context?: any) => Promise<void> {
+  return function (context = {}) {
+    function execute(index: number): Promise<void> {
+      if (index === fns.length) {
+        return Promise.resolve();
+      }
+
+      const fn = fns[index];
+      return Promise.resolve(fn(context, () => execute(index + 1)));
+    }
+
+    return execute(0);
+  };
+}
+Edge cases
+No middleware provided
+
+const composed = middlewares();
+await composed(); // Should do nothing, not crash
+Synchronous middleware
+Your code must still handle next() being called synchronously and not awaited. The recursive structure ensures this still works correctly.
+
+Middleware that does not call next()
+This will stop the chain early. It's expected behavior:
+
+
+function fn(ctx, next) {
+  console.log("Doesn't call next");
+}
+Middleware throws
+You may optionally wrap each middleware call in a try/catch to handle this gracefully, but it's not strictly required unless specified.
+

@@ -1,0 +1,32 @@
+Solution
+The useEffectOnce hook can be implemented with useRef to keep track of whether the effect has been run or not. If this ref's value has changed, it means the effect has been run once, and we shouldn't run it again. We're using useRef here because it doesn't trigger a re-render when its value changes, and is stable across renders.
+
+
+Open files in workspace
+
+import { EffectCallback, useEffect, useRef } from 'react';
+
+export default function useEffectOnce(effect: EffectCallback) {
+  const ref = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (ref.current) {
+      return;
+    }
+
+    ref.current = true;
+    return effect();
+  }, []);
+}
+Edge cases
+You might be tempted to implement useEffectOnce with just useEffect with an empty dependency array.
+
+
+import { EffectCallback, useEffect, useRef } from 'react';
+
+export default function useEffectOnce(effect: EffectCallback) {
+  useEffect(effect, []);
+}
+This implementation will work for most cases, but will cause trouble in development mode with <StrictMode>, which is the default in every React project. This implementation will only run the effect once across re-renders, but not across unmounts. This means that if the component is unmounted and mounted again, the effect will run again. <StrictMode> is supposed to catch these kinds of bugs, and with this implementation, the effect will be run at least twice in development mode; it will be run only once in production mode.
+
+When the hook says "once", it should mean actually once, and never again, throughout the lifetime of the app, unless the browser is refreshed. If the developer wants to instead have the effect run once per mount, they would have already used useEffect with an empty dependency array.

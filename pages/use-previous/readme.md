@@ -1,0 +1,23 @@
+# Use Previous
+
+Implement a `usePrevious` hook that returns the previous value of a state.
+
+```js
+export default function Component() {
+  const [count, setCount] = useState(0);
+  const previousCount = usePrevious(count);
+
+  return (
+    <div>
+      <p>current: {count}</p>
+      <p>previous: {previousCount}</p>
+      <button onClick={() => setCount((count) => count + 1)}>Increase</button>
+      <button onClick={() => setCount((count) => count - 1)}>Decrease</button>
+    </div>
+  );
+}
+```
+## Arguments
+`state`: the state to track. This should be a generic value of any type
+## Returns
+The `usePrevious` hook should return the previous state of the state argument.

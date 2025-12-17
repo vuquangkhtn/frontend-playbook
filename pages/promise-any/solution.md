@@ -1,0 +1,109 @@
+Note: If you haven't completed the Promise.all question, you should attempt that first.
+
+Async programming is frequently tested during interviews. Understanding how Promise.any works under the hood will help you in understanding the mechanisms behind similar Promise-related functions like Promise.race, Promise.all, Promise.allSettled etc.
+
+Solution
+Promise.any is very similar to Promise.all, but the resolves and rejects are swapped around.
+
+There are a few aspects to this question we need to bear in mind and handle:
+
+Promises are meant to be chained, so the function needs to return a Promise.
+If the input array is empty, an AggregateError is returned with errors set to an empty array.
+The returned Promise resolved immediately with the first input value that is resolved.
+The returned Promise is rejected with an AggregateError containing an array of errors values in the same order as the input array if all of them are rejected.
+The input array can contain non-Promises.
+We'll return a Promise at the top level of the function. We first check if the input array is empty, and reject with an empty AggregateError (new AggregateError([])) if so.
+
+We then need to attempt resolving every item in the input array. This can be achieved using Array.prototype.forEach or Array.prototype.map.
+
+If any of the items are fulfilled, we resolve the top-level Promise immediately with that value without waiting for any other pending promises.
+
+As we encounter rejections, we need to keep them in an errors array in case all the promises turn out to be rejected. As the returned errors will need to preserve the order of the input array, we create an errors array and slot the value in the right place using its index within the input array.
+
+To know when all the input array values are no longer pending, we keep track of how many pending promises there are by initializing a counter of pending values and decrementing it whenever a value is rejected. When the counter reaches 0, we can reject with an AggregateError using the errors. There is no need to modify the pending counter when a value is resolved because the overall promise will be resolved.
+
+One thing to note here is that because the input array can contain non-Promise values, if we are not await-ing them, we need to wrap each value with Promise.resolve() which allows us to use .then() on each of them and we don't have to differentiate between Promise vs non-Promise values and whether they need to be resolved.
+
+/**
+ * @param {Array} iterable
+ * @return {Promise}
+ */
+export default function promiseAny(iterable) {
+  return new Promise((resolve, reject) => {
+    if (iterable.length === 0) {
+      reject(new AggregateError([]));
+    }
+
+    let pending = iterable.length;
+    const errors = new Array(iterable.length);
+
+    iterable.forEach(async (item, index) => {
+      try {
+        const value = await item;
+        resolve(value);
+      } catch (err) {
+        errors[index] = err;
+        pending--;
+
+        if (pending === 0) {
+          reject(new AggregateError(errors));
+        }
+      }
+    });
+  });
+}
+The pending counter is essential in ensuring correct behavior. For example, an alternative approach that seems to work (but doesn't) is to check if the length of the errors array is equal to the length of the iterable:
+
+
+errors[index] = await error;
+if (errors.length == iterable.length) {
+  reject(new AggregateError(errors));
+}
+Suppose we have passed in an array of 3 promises, and the last promise is rejected first, causing errors[2] to be assigned. When this happens, the length of errors array is now 3, and reject() will be invoked with an incomplete errors array because the other 2 promises are still pending; we should not call reject() yet.
+
+The pending values counter avoids this problem by ensuring that we only call reject() when all the promises have rejected and thus are no longer pending.
+
+Here's an alternative version which uses Promise.then() if you prefer not to use async/await.
+
+
+Open files in workspace
+
+/**
+ * @param {Array} iterable
+ * @return {Promise}
+ */
+export default function promiseAny(iterable) {
+  return new Promise((resolve, reject) => {
+    if (iterable.length === 0) {
+      reject(new AggregateError([]));
+    }
+
+    let pending = iterable.length;
+    const errors = new Array(iterable.length);
+
+    iterable.forEach((item, index) =>
+      Promise.resolve(item).then(
+        (value) => {
+          resolve(value);
+        },
+        (reason) => {
+          errors[index] = reason;
+          pending--;
+
+          if (pending === 0) {
+            reject(new AggregateError(errors));
+          }
+        },
+      ),
+    );
+  });
+}
+Edge cases
+Empty input array. The promise should reject with an AggregateError.
+Techniques
+Knowledge of Promises, how to construct one, how to use them.
+Async programming.
+Notes
+The evaluator does not verify that your input array is resolved concurrently rather than sequentially.
+Resources
+Promise.any() - JavaScript | MDN

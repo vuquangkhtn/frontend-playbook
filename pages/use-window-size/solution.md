@@ -1,0 +1,40 @@
+Solution
+The useWindowSize hook can be implemented using the useState hook to store the current screen properties and the useLayoutEffect hook to update the properties when the screen is resized. We can attach an event listener to the resize event on the window object to update the properties state.
+
+useLayoutEffect is used instead of useEffect to ensure that the size is updated synchronously after the browser has painted. This is important for animations and other visual effects that depend on the window size.
+
+We recreate the windowSize object so that the user doesn't accidentally mutate the original object.
+
+
+Open files in workspace
+
+import { useState, useLayoutEffect } from 'react';
+
+interface WindowSize {
+  height: number;
+  width: number;
+}
+
+export default function useWindowSize(): WindowSize {
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    height: 0,
+    width: 0,
+  });
+
+  useLayoutEffect(() => {
+    const resize = () =>
+      setWindowSize({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      });
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    return () => {
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  return windowSize;
+}
