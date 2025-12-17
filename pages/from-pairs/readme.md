@@ -1,27 +1,22 @@
 # From Pairs
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Implement a function fromPairs(pairs) that transforms a list of key-value pairs into an object.
 
 
-## Arguments
-`array` (Array): Array of numbers.
+fromPairs(pairs);
+Arguments
+pairs (Array): An array of key-value pairs.
+Returns
+(Object): Returns the object composed from the key-value pairs.
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+Examples
 
-## Examples
+const pairs = [
+  ['a', 1],
+  ['b', 2],
+  ['c', 3],
+];
 
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+fromPairs(pairs); // => { a: 1, b: 2, c: 3 }
+Resources
+Lodash _.fromPairs

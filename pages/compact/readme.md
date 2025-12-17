@@ -1,27 +1,15 @@
 # Compact
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Implement a function compact(array) that creates an array with all falsey values removed. The values false, null, 0, '', undefined, and NaN are falsey (you should know this by heart!).
 
+Arguments
+array (Array): The array to compact.
+Returns
+(Array): Returns the new array of filtered values.
 
-## Arguments
-`array` (Array): Array of numbers.
+Examples
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+compact([0, 1, false, 2, '', 3, null]); // => [1, 2, 3]
+compact(['hello', 123, [], {}]); // => ['hello', 123, [], {}]
+Resources
+Lodash _.compact

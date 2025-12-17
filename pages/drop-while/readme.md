@@ -1,27 +1,40 @@
 # Drop While
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Given a predicate function and an array, implement a function dropWhile(array, predicate). This function should create a slice of array excluding elements dropped from the start of the list. Elements are dropped until predicate returns falsey. Your function should not modify the original array. The array may or may not be in sorted order.
 
+Arguments
+array (Array): The array to query.
+predicate (Function): The function invoked per iteration.
+Predicate signature: The predicate function is invoked with three arguments: (value, index, array). You must invoke it with all three arguments.
 
-## Arguments
-`array` (Array): Array of numbers.
+value: The current element being iterated.
+index: The index of the current element.
+array: The original input array.
+Returns
+(Array): Returns the slice of array containing the kept elements.
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+Examples
 
-## Examples
+dropWhile([1, 2, 3, 4, 5], (value, _index, _array) => value < 3);
+// => [1, 2, 3]
+// Explanation: Starts from left (1). 1 < 3 (true, drop). 2 < 3 (true, drop). 3 < 3 (false, stop). Returns [3, 4, 5].
 
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
+dropWhile([1, 2, 3], (value, _index, _array) => value < 6);
+// => []
+// Explanation: Starts from left (1). 1 < 6 (true, drop). 2 < 6 (true, drop). 3 < 6 (true, drop). Reaches end. Returns [].
 
-The function should return NaN if array is empty.
+dropWhile([1, 2, 3, 4, 5], (value, _index, _array) => value > 6);
+// => [1, 2, 3, 4, 5]
+// Explanation: Starts from left (1). 1 > 6 (false, stop immediately). Returns [1, 2, 3, 4, 5].
 
-```ts
-mean([]); // => NaN
-```
+dropWhile([1, 2, 3, 4, 5], (_value, index, _array) => index < 3);
+// => [4, 5]
+// Explanation: Starts at index 0. 0 < 3 (true, drop). Index 1. 1 < 3 (true, drop). Index 2. 2 < 3 (true, drop). Index 3. 3 < 3 (false, stop). Returns [4, 5].
 
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+dropWhile([4, 5, 12, 10, 11], (value, _index, array) => value < array[2]);
+// => [12, 10, 11]
+// Explanation: array[2] is 12. Starts from left (4). 4 < 12 (true, drop). Index 1 (5). 5 < 12 (true, drop). Index 2 (12). 12 < 12 (false, stop). Returns [12, 10, 11].
+Note that Lodash's dropWhile utility also allows you to pass an optional thisArg parameter to bind this inside the predicate function, but for this exercise, you can ignore that parameter.
+
+Resources
+Lodash _.dropWhile

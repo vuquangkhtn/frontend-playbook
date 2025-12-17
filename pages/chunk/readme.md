@@ -1,27 +1,22 @@
 # Chunk
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Implement a function chunk(array, [size=1]) that splits the input array into groups of length size and returns them within a new array. If array can't be split evenly, the final chunk will be the remaining elements. The function should not modify the original input array.
 
+Arguments
+array (Array): The array to process.
+[size=1] (number): The length of each chunk.
+Returns
+(Array): Returns the new array of chunks.
 
-## Arguments
-`array` (Array): Array of numbers.
+Examples
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+chunk(['a', 'b', 'c', 'd']); // => [['a'], ['b'], ['c'], ['d']]
+chunk([1, 2, 3, 4], 2); // => [[1, 2], [3, 4]]
+chunk([1, 2, 3, 4], 3); // => [[1, 2, 3], [4]]
+The function should return an empty array if the array argument is empty.
 
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+Constraints
+size >= 1
+0 <= length of array <= 100
+Resources
+Lodash _.chunk

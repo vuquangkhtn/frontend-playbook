@@ -1,27 +1,37 @@
 # Fill
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Implement a function fill(array, value, [start=0], [end=array.length]) that fills an array with values from start up to, but not including, end.
 
+Note: This method mutates array.
 
-## Arguments
-`array` (Array): Array of numbers.
+Arguments
+array (Array): The array to fill.
+value (*): The value to fill array with.
+[start=0] (number): The start position.
+[end=array.length] (number): The end position.
+Returns
+(Array): Returns array.
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+Examples
 
-## Examples
+fill([1, 2, 3], 'a'); // ['a', 'a', 'a']
+fill([4, 6, 8, 10], '*', 1, 3); // [4, '*', '*', 10]
 
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
+// out of bounds indices
+fill([4, 6, 8, 10, 12], '*', 1, 8); // [4, '*', '*', '*', '*']
+fill([4, 6, 8, 10, 12], '*', 8, 10); // [4, 6, 8, 10, 12]
 
-The function should return NaN if array is empty.
+// negative but within bounds indices
+fill([4, 6, 8, 10, 12], '*', -3, -1); // [4, 6, '*', '*', 12]
 
-```ts
-mean([]); // => NaN
-```
+// negative out of bounds indices
+fill([4, 6, 8, 10, 12], '*', -10, 2); // ['*', '*', 8, 10, 12]
+fill([4, 6, 8, 10, 12], '*', -10, -8); // [4, 6, 8, 10, 12]
+Make sure to handle negative indices and out of bound indices as detailed in the examples above. In general, follow these principles:
 
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+Translate negative indices to their corresponding positive indices
+If the translated end index is smaller than the translated start index, no fill will take place
+If a tranlated index is < 0, clamp it to 0.
+If a translated index is > array.length, clamp it to array.length.
+Resources
+Lodash _.fill

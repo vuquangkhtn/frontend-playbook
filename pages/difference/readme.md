@@ -1,27 +1,22 @@
 # Difference
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Implement a function difference(array, values) that creates an array of array values not included in the other given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
+
+Arguments
+array (Array): The array to inspect.
+values (Array): The values to exclude.
+Returns
+(Array): Returns the new array of filtered values.
+
+Examples
+
+difference([1, 2, 3], [2, 3]); // => [1]
+difference([1, 2, 3, 4], [2, 3, 1]); // => [4]
+difference([1, 2, 3], [2, 3, 1, 4]); // => []
+difference([1, , 3], [1]); // => [3] (case of a sparse array)
+The function should return the original array values if values is empty.
 
 
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+difference([1, 2, 3], []); // => [1, 2, 3]
+Resources
+Lodash _.difference

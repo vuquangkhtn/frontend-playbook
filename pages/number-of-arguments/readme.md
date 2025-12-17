@@ -1,27 +1,13 @@
 # Number Of Arguments
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Implement a function numberOfArguments, to return the number of arguments it was called with. Note that this value is the actual number of arguments, which can be more or less than the defined parameter count (which is determined by Function.prototype.length).
+
+P.S. There's no practical use for this function. However, it is useful to know how to determine the number of arguments, which can be useful for questions that require writing variadic functions like Classnames and Curry II.
 
 
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+numberOfArguments(); // 0
+numberOfArguments(1); // 1
+numberOfArguments(2, 3); // 2
+numberOfArguments('a', 'b', 'c'); // 3
+Resources
+arguments.length | MDN
