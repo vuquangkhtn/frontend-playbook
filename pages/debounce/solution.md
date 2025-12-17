@@ -44,11 +44,42 @@ export default function debounce(func, wait = 0) {
 Edge cases
 The main pitfall in this question is invoking the callback function with the correct this, the value of this when the debounced function was called. Since the callback function will be invoked in a timeout, we need to ensure that the first argument to func.apply()/func.call() is the right value. There are two ways to achieve this:
 
-Use another variable to keep a reference to this and access this via that variable from within the setTimeout callback. This is the traditional way of preserving this before arrow functions existed.
-Use an arrow function to declare the setTimeout callback where the this value within it has lexical scope. The value of this within arrow functions is bound to the context in which the function is created, not to the environment in which the function is called.
+1. Use another variable to keep a reference to this and access this via that variable from within the setTimeout callback. This is the traditional way of preserving this before arrow functions existed.
+2. Use an arrow function to declare the setTimeout callback where the this value within it has lexical scope. The value of this within arrow functions is bound to the context in which the function is created, not to the environment in which the function is called.
 
 Open files in workspace
 
 /**
  * @callback func
- * @param {number
+ * @param {number} wait
+ * @return {Function}
+ */
+export default function debounce(func, wait = 0) {
+  let timeoutID = null;
+  return function (...args) {
+    clearTimeout(timeoutID);
+
+    timeoutID = setTimeout(() => {
+      timeoutID = null; // Not strictly necessary but good to include.
+      // Has the same `this` as the outer function's
+      // as it's within an arrow function.
+      func.apply(this, args);
+    }, wait);
+  };
+}
+Also, we should not implement the returned function using an arrow function for reasons mentioned above. The this value of the returned function needs to be dynamically determined when executed.
+
+Read this article for a more in-depth explanation.
+
+Techniques
+Using setTimeout
+Closures
+How this works
+Invoking functions via Function.prototype.apply()/Function.prototype.call()
+Notes
+clearTimeout() is a forgiving function and passing an invalid ID to clearTimeout() silently does nothing; no exception is thrown. Hence we don't have to check for timeoutID === null before using clearTimeout().
+
+Resources
+Debouncing and Throttling Explained Through Examples
+Implementing Debounce in JavaScript
+clearTimeout() - Web APIs | MDN

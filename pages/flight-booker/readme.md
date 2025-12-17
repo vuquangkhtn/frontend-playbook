@@ -1,27 +1,16 @@
 # Flight Booker
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Build a component that books a one-way or round-trip flight for specified dates.
 
-
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+Requirements
+The user can choose from two flight options: "One-way flight" and "Round-trip flight".
+Input date fields
+The date input fields represent the departure date and return dates.
+The return date input is displayed if the "Round-trip flight" option is chosen, hidden otherwise.
+Form validation should be done upon submission for invalid fields:
+Dates are in the past.
+Return date is before the departure date.
+Upon successful submission, a message is displayed informing the user of the selection:
+One-way flight: "You have booked a one-way flight on YYYY-MM-DD"
+Round-trip flight "You have booked a round-trip flight, departing on YYYY-MM-DD and returning on YYYY-MM-DD"
+The <input type="date"> element would be helpful for the date input fields.

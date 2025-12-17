@@ -1,0 +1,237 @@
+An event-based interaction model is the most common way of building user interfaces. The DOM is also built around this model with the document.addEventListener() and document.removeEventListener() APIs to allow responding to events like click, hover, input, etc.
+
+Clarification questions
+The following are good questions to ask the interviewer to demonstrate your thoughtfulness. Depending on their response, you might need to adjust the implementation accordingly.
+
+Can emitter.emit() be called without any arguments besides the eventName?
+Yes, it can be.
+Can the same listener be added multiple times with the same eventName?
+Yes, it can be. It will be called once for each time it is added when eventName is emitted in the order they were added.
+Can non-existent events be emitted?
+Yes, but nothing should happen and the code should not error or crash.
+What should the this value of the listeners be?
+It can be null.
+Can sub.off() be called more than once?
+Yes it can be, the second call should be a no-op.
+Can listeners contain code that invoke methods on the emitter instance?
+Yes, but we can ignore that scenario for this question.
+What if the listener callbacks throw an error during emitter.emit()?
+The error should be caught and not halt the rest of the execution. However, we will not test for this case.
+We will handle all the above cases except for the last two cases.
+
+Solution
+Data structure
+Firstly, we have to decide on the data structure to store the events and the listeners.
+
+We need to be able to uniquely identify each listener function so that when we call sub.off() we know which listener to remove. This can be achieved by having the EventEmitter instance keep an integer counter which is incremented on every new listener added and each listener is assigned the counter's current value.
+
+We can either use:
+
+1. Map of eventNames of map of listener functions.
+
+events = {
+  foo: { 1: Function1, 3: Function3 },
+  bar: { 2: Function2 },
+};
+Pros:
+Fast lookup of listeners given an eventName and a listener ID.
+Cons:
+Since eventName is provided by the user, it can be any value and might conflict with existing keys on Object.prototype such as .toString. We will handle this situation.
+2. A flat array of eventName and listener pairs.
+
+events = [
+  { eventName: 'foo', listener: Function1, key: 1 },
+  { eventName: 'bar', listener: Function2, key: 2 },
+  { eventName: 'foo', listener: Function3, key: 3 },
+];
+Pros:
+Simple, flat structure.
+Cons:
+Requires O(n) time to find the listeners for an event because you have to look through the entire list of events.
+emit() and sub.off() operations will require iterating through the array, you can't instantly determine if an event exists and ignore emission of non-existent events.
+Potentially more space needed to store the data because of the repeated object fields and eventName strings.
+Approach #1 is clearly superior, so we will use that. To mitigate the issue of user-provided eventNames conflicting with keys on Object.prototype, we can instantiate the _events object with Object.create(null) or use a ES6 Map class.
+
+Implementing emitter.on()
+Implementing emitter.on() is pretty straightforward. Firstly check if eventName is present as a key of the _events object and make the value an empty object (for the map of listenerIds to its listeners for that event) if it is the first time this eventName is encountered. Then push the listener into the array.
+
+Implementing sub.off()
+emitter.on() needs to return an object that has an off() method. It will suffice to use a plain object with an off() method. The off() method contains a reference to the listener's unique ID (listenerId) and eventName thanks to closures. However, for the off() method to have access to the emitter instance's this value, it should be defined using an arrow function or use a separate that variable to retain a reference to this.
+
+To remove the listener from the emitter, simply delete the key from this.events[eventName]. This approach also works if called sub.off() is called multiple times because delete on non-existing keys is a no-op.
+
+
+function on(eventName, listener) {
+  // Rest of the implementation omitted for brevity.
+  return {
+    // Use arrow function so that `this` is preserved.
+    off: () => {
+      delete this.events[eventName][listenerId];
+    },
+  };
+}
+
+function on(eventName, listener) {
+  // Rest of the implementation omitted for brevity.
+  // Define a separate `that` variable to retain a reference to `this`.
+  const that = this;
+  return {
+    off() {
+      delete that.events[eventName][listenerId];
+    },
+  };
+}
+We can create a new class EventSubscription with an .off() method to instantiate as the object returned from emitter.off(), which has the benefit of sharing the method implementation across instances. However, the memory footprint is negligible and is not really necessary.
+
+Implementing EventEmitter.emit()
+Check if the eventName exists or has any events and we can terminate and return false if the eventName doesn't exist or if there are no listeners for eventName (object is empty).
+
+To pass the rest of the arguments to each listener, we have to use ...args in the method signature to capture all other arguments as the variable args. The listeners can be called with args via Function.prototype.apply() or Function.prototype.call().
+
+Built-in object properties colliding with user-provided eventNames
+As mentioned above, if you're using a plain JavaScript object to map eventName to callbacks, one potential issue is using eventNames that clash with properties existing on JavaScript objects such as valueOf and toString.
+
+
+const emitter = new EventEmitter();
+emitter.emit('toString'); // Might crash because the property does exist on the object.
+Two ways to handle this:
+
+Use a Map instead of an object. This is the modern approach.
+Create your plain JavaScript object with Object.create(null) so that the object does not have a prototype and no additional properties.
+
+Class-based solution
+
+JavaScript
+
+TypeScript
+
+Open files in workspace
+
+export default class EventEmitter {
+  constructor() {
+    // Avoid creating objects via `{}` to exclude unwanted properties
+    // on the prototype (such as `.toString`).
+    this._events = Object.create(null);
+    // Use an incrementing number to uniquely identify each listener.
+    this._key = 0;
+  }
+
+  /**
+   * @param {string} eventName
+   * @param {Function} listener
+   * @returns {{off: Function}}
+   */
+  on(eventName, listener) {
+    if (!Object.hasOwn(this._events, eventName)) {
+      // It's ok to use `{}` here since the keys will just be numbers.
+      this._events[eventName] = {};
+    }
+
+    const listenerId = this._key;
+    this._events[eventName][listenerId] = listener;
+    this._key++;
+
+    return {
+      // Use arrow function so that `this` is preserved.
+      off: () => {
+        delete this._events[eventName][listenerId];
+      },
+    };
+  }
+
+  /**
+   * @param {string} eventName
+   * @param {...any} args
+   * @returns boolean
+   */
+  emit(eventName, ...args) {
+    // Early return for non-existing eventNames or
+    // events without listeners.
+    if (
+      !Object.hasOwn(this._events, eventName) ||
+      Object.keys(this._events[eventName]).length === 0
+    ) {
+      return false;
+    }
+
+    // Make a clone of the listeners in case one of the
+    // listeners calls sub.off() and changes the listeners.
+    const listeners = { ...this._events[eventName] };
+    Object.values(listeners).forEach((listener) => {
+      listener.apply(null, args);
+    });
+
+    return true;
+  }
+}
+Function prototype-based solution
+
+export default function EventEmitter() {
+  // Avoid creating objects via `{}` to exclude unwanted properties
+  // on the prototype (such as `.toString`).
+  this._events = Object.create(null);
+  // Use an incrementing number to unique identify each listener.
+  this._key = 0;
+}
+
+/**
+ * @param {string} eventName
+ * @param {Function} listener
+ * @returns {{off: Function}}
+ */
+EventEmitter.prototype.on = function (eventName, listener) {
+  if (!Object.hasOwn(this._events, eventName)) {
+    // It's ok to use `{}` here since the keys will just be numbers.
+    this._events[eventName] = {};
+  }
+
+  const listenerId = this._key;
+  this._events[eventName][listenerId] = listener;
+  this._key++;
+
+  return {
+    // Use arrow function so that `this` is preserved.
+    off: () => {
+      delete this._events[eventName][listenerId];
+    },
+  };
+};
+
+/**
+ * @param {string} eventName
+ * @param {...any} args
+ * @returns boolean
+ */
+EventEmitter.prototype.emit = function (eventName, ...args) {
+  // Early return for non-existing eventNames or events without listeners.
+  if (
+    !Object.hasOwn(this._events, eventName) ||
+    Object.keys(this._events[eventName]).length === 0
+  ) {
+    return false;
+  }
+
+  // Make a clone of the listeners in case one of the listeners
+  // calls sub.off() and changes the listeners.
+  const listeners = { ...this._events[eventName] };
+  Object.values(listeners).forEach((listener) => {
+    listener.apply(null, args);
+  });
+
+  return true;
+};
+
+Edge cases
+The same listener function can be added more than once for the same event. Calling sub.off() should remove the respective listener because the order of invocation matters.
+emitter.emit() is called without any arguments.
+Methods are called with non-existing eventNames.
+sub.off() is called multiple times and shouldn't crash.
+Techniques
+Object-oriented programming.
+Using the right data structures.
+Closures.
+Handling of variadic arguments.
+Notes
+Node.js' EventEmitter's implementation allows eventNames to be symbols which we don't allow here.
+Resources
+EventEmitter | Node.js
