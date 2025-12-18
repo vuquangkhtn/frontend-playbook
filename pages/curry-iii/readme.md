@@ -1,0 +1,27 @@
+Note: This is an advanced version of Curry II, you should complete that first before attempting this question. Also, this is a hard question and resembles a brainteaser more than an actual question candidates are expected to solve. However, solving this question is rewarding and is sure to improve your knowledge of JavaScript.
+
+Currying is the technique of converting a function that takes multiple arguments into a sequence of functions that each takes a single argument.
+
+Implement the curry function which accepts a function as the only argument and returns a function that accepts a variadic number of arguments (vs only one argument at a time in Curry and a fixed number of arguments in Curry II) and returns a function which can be repeatedly called.
+
+Expected output behavior
+When the returned function is in an expression that suggests the value should be a string or a number, the initial function argument is then invoked with the provided arguments and the result is used as the value.
+
+Examples
+
+function multiply(...numbers) {
+  return numbers.reduce((a, b) => a * b, 1);
+}
+const curriedMultiply = curry(multiply);
+const multiplyByThree = curriedMultiply(3);
+console.log(multiplyByThree); // 3
+console.log(multiplyByThree(4)); // 12
+
+const multiplyByFifteen = multiplyByThree(5);
+console.log(multiplyByFifteen); // 15
+console.log(multiplyByFifteen(2)); // 30
+
+console.log(curriedMultiply(1)(2)(3)(4)); // 24
+console.log(curriedMultiply(1, 2, 3, 4)); // 24
+Hint
+Look up the Symbol.toPrimitive, Object.prototype.toString() and Object.prototype.valueOf() functions.
