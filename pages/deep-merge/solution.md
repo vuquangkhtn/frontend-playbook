@@ -1,0 +1,59 @@
+Clarification questions
+Can non-primitives values in the merged object reference the original objects?
+Yes, as long as the original objects are not modified.
+Solution
+Since the input objects can be deeply nested structures, a recursive solution can be used to traversing both values at the same time. The idea is to recursively visit all object values and combine the contents depending on the type of values at the same position in the objects.
+
+Based on the rules, we only need to combine overlapping values that are arrays or objects. Hence there are three cases we need to handle:
+
+Both values are arrays: Combine the values by building a new array from the contents of both arrays.
+Both values are objects: Create a clone of objA, then iterate through keys in objB, calling deepMerge on the values for the keys that exist in both objects. The returned value is the value that should exist within the merged object. We need to do strict checks for whether an object is a plain JavaScript object as there could be object-like values within the input like null, Date, RegExp where typeof value will return 'object' for these values.
+Values are neither both arrays or both objects: Return objB since it comes later and should overwrite the value at the same position within objA.
+
+JavaScript
+
+TypeScript
+
+Open files in workspace
+
+/**
+ * @param {Object|Array} valA
+ * @param {Object|Array} valB
+ * @returns Object|Array
+ */
+export default function deepMerge(valA, valB) {
+  // Both values are arrays.
+  if (Array.isArray(valA) && Array.isArray(valB)) {
+    return [...valA, ...valB];
+  }
+
+  // Both values are objects.
+  if (isPlainObject(valA) && isPlainObject(valB)) {
+    const newObj = { ...valA };
+    for (const key in valB) {
+      if (Object.prototype.hasOwnProperty.call(valA, key)) {
+        newObj[key] = deepMerge(valA[key], valB[key]);
+      } else {
+        newObj[key] = valB[key];
+      }
+    }
+    return newObj;
+  }
+
+  // Return the second value as it will "win" in case of an overlap.
+  return valB;
+}
+
+function isPlainObject(value) {
+  if (value == null) {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === null || prototype === Object.prototype;
+}
+
+Note that the merged object can contain references to values in the original objects. This happens in the case where arrays contains objects and these objects aren't directly processed with deepMerge. If a full copy of the objects is desired, you can deep clone both objects first before merging or deep clone the resulting object.
+
+Edge cases
+Non-plain JavaScript object values like null, Date, Symbol should be treated as non-objects.

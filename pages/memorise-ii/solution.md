@@ -1,0 +1,167 @@
+Solution
+The key to solving this question is to use a cache that stores the results for an input argument. If a cache entry exists for the input argument, return the cached result. Otherwise, call the function as per normal, put the result into the cache with the input argument as the key so that subsequent calls to the function with the same parameter will be a cache hit and return the value directly without calling the original function.
+
+Approach 1: Map-based cache and serialized arguments as cache key
+This question can be broken down into three parts:
+
+Determining the cache key
+The cache key is a value that has a one-one relationship with the arguments that func can be called with. Since the input types are strings and numbers, we can construct a unique key by concatenating them together.
+
+A first attempt at constructing a hash function for the arguments could be doing args.join('_') (or some other token) but this has a few issues:
+
+If the string contains _, then there's a possibility of non-unique hashes. E.g. both ['hello_', 'world'] and ['hello', '_world'] will result in hello_world as the key.
+Numbers aren't differentiated from strings. E.g. both ['1', 'foo'] and [1, 'foo'] will result in 1_foo as the key.
+Hashing is tricky business, and one built-in function we can use is JSON.stringify(). It adds double quotes around strings, effectively differentiating numbers and strings, and correctly segments the parameters within the stringified result. Note that we can use JSON.stringify() only because of the restriction on string and number inputs. If there are other types of inputs like Set, JSON.stringify() by default turns them into {} regardless of contents and will no longer produce a unique value for unique argument combinations.
+
+Deciding on a structure for the cache
+Cache lookups have to be fast, ideally with a O(1) time complexity. In JavaScript, objects and Maps are able to serve the purpose of a fast lookup for a key and a corresponding value. Since the key is a string, we can use both objects and Maps for the cache structure
+
+The returned function has access to the cache via closures. With closures, each unique memoized function instance will have its own cache.
+
+Using the cache
+Before invoking the original function func, the memoized function first checks if the cache already contains an entry for the current arguments (using the JSON.stringify(args) as the key). This will result in one of the following two scenarios:
+
+1. The cache contains an entry for key. A cached result exists, it means that the function has been called with the same arguments before, and there is no need to recompute the result. In this case, the memoized function simply returns the cached result using cache.get(key).
+2. The cache does not contain an entry these args. If the cache does not contain a result for the current args, it means that the function is called with arguments that haven't been seen before. The memoized function then invokes the original function func using Function.prototype.apply(). Function.prototype.apply() is used to ensure that the context (this) of the original function is preserved when called from the memoized function. The arguments are passed to the original function func and after computing the result using the original function, the memoized function stores the result in the cache by associating it with the corresponding key using cache.set(key, result). Finally the memoized function returns the computed result.
+
+```ts
+type Fn<T> = (this: any, ...args: Array<any>) => T;
+
+export default function memoize<T>(func: Fn<T>): Fn<T> {
+  const cache = new Map<string, T>();
+
+  return function (this: any, ...args) {
+    const key = JSON.stringify(args);
+
+    if (cache.has(key)) {
+      return cache.get(key)!;
+    }
+
+    const result = func.apply(this, args);
+    cache.set(key, result);
+
+    return result;
+  };
+}
+
+```
+
+Approach 2: Trie-based cache
+Instead of constructing a single string key out of the arguments, we can use individual argument item as nodes within a trie data structure. Here we implement a Trie and TrieNode class with the same relevant set, has, get APIs as Map and can just change the cache initialization step and have the rest of the code remain the same. The benefit of using a trie as the cache is lesser memory space needed, but lookup time complexity is around the same as the JSON.stringify version.
+
+
+Open files in workspace
+
+```ts
+/**
+ * @param {Function} func
+ * @returns Function
+ */
+export default function memoize(func) {
+  const cache = new Trie();
+
+  return function (...args) {
+    if (cache.has(args)) {
+      return cache.get(args);
+    }
+
+    const result = func.apply(this, args);
+    cache.set(args, result);
+
+    return result;
+  };
+}
+
+class TrieNode {
+  constructor(value) {
+    this._value = value;
+    this._nodes = new Map();
+  }
+
+  getValue() {
+    return this._value;
+  }
+
+  setValue(value) {
+    this._value = value;
+  }
+
+  hasKey(nodeKey) {
+    return this._nodes.has(nodeKey);
+  }
+
+  getNode(nodeKey) {
+    return this._nodes.get(nodeKey);
+  }
+
+  addNode(nodeKey) {
+    const newNode = new TrieNode();
+    this._nodes.set(nodeKey, newNode);
+    return newNode;
+  }
+}
+
+class Trie {
+  constructor() {
+    this._rootNode = new TrieNode();
+    this._hasValueForUndefined = false;
+  }
+
+  set(args, value) {
+    if (args.length === 0) {
+      if (this._hasValueForUndefined) {
+        return this._rootNode.getValue();
+      }
+
+      this._hasValueForUndefined = true;
+      this._rootNode.setValue(value);
+      return;
+    }
+
+    let currNode = this._rootNode;
+    for (const arg of args) {
+      if (currNode.hasKey(arg)) {
+        currNode = currNode.getNode(arg);
+      } else {
+        currNode = currNode.addNode(arg);
+      }
+    }
+
+    currNode.setValue(value);
+  }
+
+  has(args) {
+    if (args.length === 0) {
+      return this._hasValueForUndefined;
+    }
+
+    let currNode = this._rootNode;
+    for (const arg of args) {
+      if (!currNode.hasKey(arg)) {
+        return false;
+      }
+      currNode = currNode.getNode(arg);
+    }
+
+    return true;
+  }
+
+  get(args) {
+    if (args.length === 0) {
+      return this._rootNode.getValue();
+    }
+
+    let currNode = this._rootNode;
+    for (const arg of args) {
+      currNode = currNode.getNode(arg);
+    }
+
+    return currNode.getValue();
+  }
+}
+
+```
+
+Edge cases
+In practice, functions can take in arguments of varying types beyond strings and numbers, so the current memoize implementation wouldn't be sufficient for those cases.
+While this can be accessed without issues, the results are memoized solely on the input arguments, the same memoized result is returned for the same input arguments even if the this value is different between calls.
