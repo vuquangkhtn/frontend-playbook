@@ -1,27 +1,12 @@
 # Array Prototype Map
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Array.prototype.map creates a new array populated with the results of calling a provided function on every element in the calling array.
 
+Implement Array.prototype.map. To avoid overwriting the actual Array.prototype.map which is being used by the autograder, we shall instead implement it as Array.prototype.myMap.
 
-## Arguments
-`array` (Array): Array of numbers.
+Examples
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+[1, 2, 3, 4].myMap((i) => i); // [1, 2, 3, 4]
+[1, 2, 3, 4].myMap((i) => i * i); // [1, 4, 9, 16]
+Notes
+The map callback function takes in more than just the element! There's also a second parameter for Array.prototype.map as well. You are recommended to read the specification for Array.prototype.map on MDN Docs before attempting.

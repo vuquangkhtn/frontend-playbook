@@ -1,27 +1,18 @@
 # Array Prototype At
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Array.prototype.at takes an integer value and returns the item at that index, allowing for positive and negative integers. Negative integers count back from the last item in the array.
 
+Implement Array.prototype.at. To avoid overwriting the actual Array.prototype.at, we shall instead implement it as Array.prototype.myAt.
 
-## Arguments
-`array` (Array): Array of numbers.
+Examples
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+const arr = [42, 79];
+arr.myAt(0); // 42
+arr.myAt(1); // 79
+arr.myAt(2); // undefined
 
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+arr.myAt(-1); // 79
+arr.myAt(-2); // 42
+arr.myAt(-3); // undefined
+Notes
+There are some tricky cases to handle. You are recommended to read the specification for Array.prototype.at on MDN Docs before attempting.

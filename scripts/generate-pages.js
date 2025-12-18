@@ -6,23 +6,15 @@ const PAGES_DIR = path.join(ROOT, 'pages');
 const TEMPLATE_PATH = path.join(PAGES_DIR, 'mean', 'readme.md');
 
 const names = [
-  'deep equal',
-  'deep clone',
-  'text search',
-  'squash object',
-  'memorize',
-  'list format',
-  'json stringify',
-  'identical dom trees',
-  'html serializer',
-  'get elements by tag name',
-  'get elements by style',
-  'flatten',
-  'data merging',
-  'conforms to',
-  'compact-ii',
-  'classnames',
-  'camel case keys',
+  'union by',
+  'limit',
+  'is-empty',
+  'intersection with',
+  'intersection by',
+  'group by',
+  'curry',
+  'count by',
+  'array prototype concat',
 ];
 
 function toKebab(s) {
@@ -58,10 +50,10 @@ async function run() {
     const readmePath = path.join(dir, 'readme.md');
     const solutionPath = path.join(dir, 'solution.md');
 
-    await fs.writeFile(tsPath, '// empty\n');
-    await fs.writeFile(testPath, '// empty\n');
-    await fs.writeFile(solutionPath, '// empty\n');
-    await fs.writeFile(readmePath, '// empty\n');
+    await fs.writeFile(tsPath, '');
+    await fs.writeFile(testPath, '');
+    await fs.writeFile(solutionPath, '');
+    await fs.writeFile(readmePath, '');
 
     created++;
   }

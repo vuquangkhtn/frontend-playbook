@@ -1,27 +1,14 @@
 # Array Prototype Filter
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Array.prototype.filter creates a new array populated with the results of calling a provided function on every element in the calling array.
 
+For sparse arrays (e.g. [1, 2, , 4]), the empty values should be ignored while traversing the array (i.e. they should not be in the resulting array).
 
-## Arguments
-`array` (Array): Array of numbers.
+Implement Array.prototype.filter. To avoid overwriting the actual Array.prototype.filter which is being used by the autograder, we shall instead implement it as Array.prototype.myFilter.
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+Examples
 
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+[1, 2, 3, 4].myFilter((value) => value % 2 == 0); // [2, 4]
+[1, 2, 3, 4].myFilter((value) => value < 3); // [1, 2]
+Notes
+The filter callback function takes in more than just the element! There's also a second parameter for Array.prototype.filter as well. You are recommended to read the specification for Array.prototype.filter on MDN Docs before attempting.

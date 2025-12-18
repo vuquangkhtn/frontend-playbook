@@ -1,27 +1,20 @@
-# Function Prototype Bind
+The Function.prototype.bind() method creates a new function that, when called, has its this keyword set to the provided value, with a given sequence of arguments preceding any provided when the new function is called.
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Source: Function.prototype.bind() - JavaScript | MDN
 
+Implement your own Function.prototype.bind without calling the native bind method. To avoid overwriting the actual Function.prototype.bind, implement the function as Function.prototype.myBind.
 
-## Arguments
-`array` (Array): Array of numbers.
+Examples
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+const john = {
+  age: 42,
+  getAge: function () {
+    return this.age;
+  },
+};
 
-## Examples
+const unboundGetAge = john.getAge;
+console.log(unboundGetAge()); // undefined
 
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+const boundGetAge = john.getAge.myBind(john);
+console.log(boundGetAge()); // 42

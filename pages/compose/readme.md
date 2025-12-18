@@ -1,27 +1,16 @@
 # Compose
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Implement a function compose that takes multiple functions as arguments and returns a new function that applies those functions in reverse order. The output of one function becomes the input of the next function, creating a chain of function compositions.
 
+If there are no functions passed to the compose function, the default behavior is to return a new function that simply returns the input it receives. In other words, the default behavior of compose without any functions results in a simple identity function.
 
-## Arguments
-`array` (Array): Array of numbers.
+You may assume that all the functions accept a single parameter.
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+Examples
 
-## Examples
+const add1 = (num) => num + 1;
+const double = (num) => num * 2;
+const subtract10 = (num) => num - 10;
 
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+const composedFn = compose(subtract10, double, add1);
+composedFn(3); // (3 + 1) * 2 - 10 => -2

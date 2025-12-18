@@ -1,0 +1,57 @@
+Solution
+The Array.prototype.at method allows accessing elements of an array using positive or negative indices, similar to how Python's list indexing works which is convenient when accessing items from the back. Traditionally, to access the last item you'd do arr[arr.length - 1], but with this method you can do arr.at(-1).
+
+For indices that are out of bounds (defined as index < -array.length || index >= array.length), undefined is returned. To safely access the index, we can allow the index to "wrap around" by adding array.length to indices so that negative indices will become the positive counterpart. However, for positive values, this will now cause the index to exceed the array range. Hence we modulo by array.length to get the index back within the range.
+
+Note that the specifications state that the index is converted to an integer first, so Array.prototype.at works even for string versions of indices.
+
+
+JavaScript
+
+TypeScript
+
+Open files in workspace
+
+/**
+ * @param {number} index
+ * @return {any | undefined}
+ */
+Array.prototype.myAt = function (index) {
+  const len = this.length;
+  if (index < -len || index >= len) {
+    return;
+  }
+
+  return this[(index + len) % len];
+};
+Edge cases
+Using non-integer index such as [42, 79].at('1').
+One-liner solution
+You can cheat the autograder by doing this:
+
+
+Array.prototype.myAt = Array.prototype.at;
+Spec solution
+Here's a solution that is based off the Array.prototype.at ECMAScript specification.
+
+
+Open files in workspace
+
+/**
+ * @param {number} index
+ * @return {any | undefined}
+ */
+Array.prototype.myAt = function (index) {
+  const len = this.length;
+  const relativeIndex = Number(index);
+  const k = relativeIndex >= 0 ? relativeIndex : len + relativeIndex;
+
+  if (k < 0 || k >= len) {
+    return undefined;
+  }
+
+  return this[k];
+};
+Resources
+Array.prototype.at | MDN
+Array.prototype.at ECMAScript specification
