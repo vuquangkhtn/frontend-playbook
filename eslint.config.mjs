@@ -13,6 +13,13 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    languageOptions: {
+      parserOptions: {
+        "project": ["./tsconfig.json"]
+      },
+    },
+  }
 ]);
 
 export default eslintConfig;
