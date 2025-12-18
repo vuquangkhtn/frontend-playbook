@@ -1,27 +1,28 @@
-# Range
+Implement a function range([start=0], end, [step=1]) that creates an array of numbers (positive and/or negative) progressing from start up to, but not including, end. A step of -1 is used if a negative start is specified without an end or step. If end is not specified, it's set to start with start then set to 0.
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Arguments
+start (Number): The start of the range.
+end (Number): The end of the range.
+step (Number): The value to increment or decrement by.
+Returns
+(Array): Returns the range of numbers.
+
+Examples
+
+range(4); // => [0, 1, 2, 3]
+
+range(-4); // => [0, -1, -2, -3]
+
+range(1, 5); // => [1, 2, 3, 4]
+
+range(0, 20, 5); // => [0, 5, 10, 15]
+
+range(0, -4, -1); // => [0, -1, -2, -3]
+
+range(1, 4, 0); // => [1, 1, 1]
+The function should return an empty array if start is equal to end.
 
 
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+range(0); // => []
+Resources
+Lodash _.range

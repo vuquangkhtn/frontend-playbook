@@ -1,27 +1,10 @@
-# Type Utilities
+JavaScript is a dynamically typed language, which means the types of variable can be changed during runtime. Many interview questions involve recursion of values that contain values of different types and how to handle each value type (e.g. different code is needed to iterate over an array vs an object). Knowledge of handling the JavaScript types is crucial to solving questions like Deep Clone and Deep Equal.
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+In this question, we will implement the following utility functions to determine the types of primitive values.
 
-
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+isBoolean(value): Return true if value is a boolean, false otherwise.
+isNumber(value): Return true if value is a number, false otherwise. Note that NaN is considered a number.
+isNull(value): Return true if value is null, false otherwise.
+isString(value): Return true if value is a String, else false.
+isSymbol(value): Return true if value is a Symbol primitive, else false.
+isUndefined(value): Return true if value is undefined, else false.

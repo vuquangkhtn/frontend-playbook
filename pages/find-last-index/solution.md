@@ -22,5 +22,6 @@ export default function findLastIndex<T>(
 }
 
 ```
+
 Resources
 Lodash _.findLastIndex

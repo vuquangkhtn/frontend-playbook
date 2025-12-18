@@ -1,27 +1,6 @@
-# Object Map
+Implement a function objectMap(obj, fn) to return a new object containing the results of calling a provided function on every value in the object. The function fn is called with a single argument, the value that is being mapped/transformed.
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Examples
 
-
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+const double = (x) => x * 2;
+objectMap({ foo: 1, bar: 2 }, double); // => { foo: 2, bar: 4}

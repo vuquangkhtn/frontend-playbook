@@ -1,27 +1,19 @@
-# Max By
+Implement a function maxBy(array, iteratee) that finds the element inside array with the maximum value after going through iteratee. The iteratee is invoked with one argument: (value).
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Arguments
+array (Array): The array to iterate over.
+iteratee (Function): The iteratee invoked per element.
+Returns
+(*): Returns the maximum value.
+
+Examples
+
+maxBy([{ n: 1 }, { n: 2 }], (o) => o.n); // => { n: 2 }
+
+maxBy([1, 2], (o) => -o); // => 1
+The function should ignore elements where iteratee produces null or undefined.
 
 
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+maxBy([{ n: 1 }, { n: 2 }], (o) => o.m); // => undefined
+Resources
+Lodash _.maxBy

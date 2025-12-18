@@ -1,27 +1,19 @@
-# Min By
+Implement a function minBy(array, iteratee) that finds the element inside array with the minimum value after going through iteratee.
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Arguments
+array (Array): The array to iterate over.
+iteratee (Function): The iteratee invoked per element, which is a function that accepts one argument: (value).
+Returns
+(*): Returns the minimum value.
+
+Examples
+
+minBy([2, 3, 1, 4], (num) => num); // => 1
+
+minBy([{ n: 1 }, { n: 2 }], (o) => o.n); // => { n: 1 }
+The function should ignore elements where iteratee produces null or undefined.
 
 
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+minBy([{ n: 1 }, { n: 2 }], (o) => o.m); // => undefined
+Resources
+Lodash _.minBy

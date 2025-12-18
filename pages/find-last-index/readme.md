@@ -1,5 +1,3 @@
-# Find Last Index
-
 Implement a function findLastIndex(array, predicate, [fromIndex=array.length-1]) that takes an array of values, a function predicate, and an optional fromIndex number argument. findLastIndex iterates over elements of the array from right to left.
 
 The function returns the index of the first element that satisfies the predicate when iterating backwards from fromIndex.

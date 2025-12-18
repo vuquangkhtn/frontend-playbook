@@ -1,0 +1,39 @@
+Solution
+Implementing these utility functions won't be an entire interview question itself, but you likely need to implement some of these utility functions as part of solving more complex interview questions.
+
+Most of the functions involve only one line and you might not even need to write a separate function for a single line of logic. The more important thing here is to know how to check for each data type.
+
+It's also important to note the difference between null and undefined. null == undefined is true, so we need to use === if the intention is to check for exact null and undefined values.
+
+
+JavaScript
+
+TypeScript
+
+Open files in workspace
+
+export function isBoolean(value) {
+  return value === true || value === false;
+}
+
+export function isNumber(value) {
+  return typeof value === 'number';
+}
+
+export function isNull(value) {
+  return value === null;
+}
+
+export function isString(value) {
+  return typeof value === 'string';
+}
+
+export function isSymbol(value) {
+  return typeof value === 'symbol';
+}
+
+export function isUndefined(value) {
+  return value === undefined;
+}
+Techniques
+Familiarity with JavaScript types.

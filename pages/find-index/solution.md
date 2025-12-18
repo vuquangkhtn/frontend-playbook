@@ -18,5 +18,3 @@ export default function findIndex<T>(
 }
 
 ```
-Resources
-Lodash _.findIndex

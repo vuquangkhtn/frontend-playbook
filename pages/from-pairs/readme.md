@@ -1,5 +1,3 @@
-# From Pairs
-
 Implement a function fromPairs(pairs) that transforms a list of key-value pairs into an object.
 
 

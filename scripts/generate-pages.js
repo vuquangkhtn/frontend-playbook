@@ -6,15 +6,24 @@ const PAGES_DIR = path.join(ROOT, 'pages');
 const TEMPLATE_PATH = path.join(PAGES_DIR, 'mean', 'readme.md');
 
 const names = [
-  'union by',
-  'limit',
-  'is-empty',
-  'intersection with',
-  'intersection by',
-  'group by',
-  'curry',
-  'count by',
-  'array prototype concat',
+  'Unique Array',
+  'Type Utilities',
+  'Singleton',
+  'Range Right',
+  'Range',
+  'Once',
+  'Object Map',
+  'Min By',
+  'Max By',
+  'Intersection',
+  'In Range',
+  'Get',
+  'Function prototype call',
+  'Function.prototype.apply',
+  'From Pairs',
+  'Find Last Index',
+  'Find Index',
+  'Fill'
 ];
 
 function toKebab(s) {

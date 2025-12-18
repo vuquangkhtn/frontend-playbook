@@ -1,27 +1,20 @@
-# In Range
+Implement a function inRange(value, [start=0], end) to check if a number value is between start and up to, but not including, end. If only 2 arguments are specified, the second argument becomes end and start is set to 0. If start is greater than end, the parameters are swapped to support negative ranges.
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Arguments
+value (number): The number to check.
+[start=0] (number): The start of the range.
+end (number): The end of the range (not including).
+Returns
+(boolean): Returns true if value is in the range, else false.
 
+Examples
 
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+inRange(3, 2, 4); // => true
+inRange(4, 8); // => true
+inRange(4, 2); // => false
+inRange(2, 2); // => false
+inRange(1.2, 2); // => true
+inRange(5.2, 4); // => false
+inRange(-3, -2, -6); // => true
+Resources
+Lodash _.inRange

@@ -1,27 +1,28 @@
-# Range Right
+Implement a function rangeRight([start=0], end, [step=1]) that creates an array of numbers progressing from start up to (but not including) end with a specified step, similar to range, but in a descending order.
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Arguments
+start (Number): The start of the range.
+end (Number): The end of the range.
+step (Number): The value to increment or decrement by.
+Returns
+(Array): Returns the range of numbers.
+
+Examples
+
+rangeRight(4); // => [3, 2, 1, 0]
+
+rangeRight(-4); // => [-3, -2, -1, 0]
+
+rangeRight(1, 5); // => [4, 3, 2, 1]
+
+rangeRight(0, 20, 5); // => [15, 10, 5, 0]
+
+rangeRight(0, -4, -1); // => [-3, -2, -1, 0]
+
+rangeRight(1, 4, 0); // => [1, 1, 1]
+The function should return an empty array if start is equal to end.
 
 
-## Arguments
-`array` (Array): Array of numbers.
-
-## Returns
-`(Number)`: Returns the mean of the values in array.
-
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+rangeRight(0); // => []
+Resources
+Lodash _.rangeRight

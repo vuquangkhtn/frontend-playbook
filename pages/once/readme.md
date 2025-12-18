@@ -1,27 +1,20 @@
-# Once
+Sometimes it's helpful to ensure a function runs only once during the lifecycle of the website, e.g. for setting up logging, initializing an environment, etc.
 
-Implement a function `mean(array)` that returns the mean (also known as average) of the values inside `array`, which is an array of numbers.
+Implement a function that accepts a callback and restricts its invocation to at most once. Subsequent calls of the function will return the result of the first invocation of the callback function. The callback function is invoked with the this binding and arguments of the created function.
 
+Examples
 
-## Arguments
-`array` (Array): Array of numbers.
+let i = 1;
 
-## Returns
-`(Number)`: Returns the mean of the values in array.
+function incrementBy(value) {
+  i += value;
+  return i;
+}
 
-## Examples
-
-```ts
-mean([4, 2, 8, 6]); // => 5
-mean([1, 2, 3, 4]); // => 2.5
-mean([1, 2, 2]); // => 1.6666666666666667
-```
-
-The function should return NaN if array is empty.
-
-```ts
-mean([]); // => NaN
-```
-
-## Resources
-[Lodash _.mean](https://lodash.com/docs/#mean)
+const incrementByOnce = once(incrementBy);
+incrementByOnce(2); // i is now 3; The function returns 3.
+incrementByOnce(3); // i is still 3; The function returns the result of the first invocation, which is 3.
+i = 4;
+incrementByOnce(2); // i is still 4 as it is not modified. However, the function returns the result of the first invocation, which is 3.
+Resources
+Lodash _.once

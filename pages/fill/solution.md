@@ -1,21 +1,13 @@
 Solution
 A key part of the solution approach is to translate negative indices to corresponding positive ones. Then, it is simpler to check bounds and handle edge cases.
 
-
-JavaScript
-
-TypeScript
-
-Open files in workspace
-
-/**
- * @param {Array} array - The array to fill.
- * @param {*} value - The value to fill array with.
- * @param {number} [start=0] - The start position.
- * @param {number} [end=array.length] - The end position.
- * @return {Array} Returns the filled array.
- */
-export default function fill(array, value, start = 0, end = array.length) {
+```ts
+export default function fill<T>(
+  array: Array<T>,
+  value: any,
+  start: number = 0,
+  end: number = array.length,
+): Array<T> {
   const length = array.length;
 
   if (start < 0) {
@@ -36,9 +28,5 @@ export default function fill(array, value, start = 0, end = array.length) {
 
   return array;
 }
-Edge cases
-Empty, one, two-element arrays.
-Negative indices.
-end is 'smaller' than start: the fill should not occur at all.
-Resources
-Lodash _.fill
+
+```
