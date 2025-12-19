@@ -1,4 +1,4 @@
-olution
+Solution
 The complexity of an auth code input component lies in the user experience, the custom input handling, and focus management:
 
 Instead of a single <input>, the code is split across N <input> fields
