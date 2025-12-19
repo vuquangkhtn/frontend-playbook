@@ -2,28 +2,13 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const PAGES_DIR = path.join(ROOT, 'pages');
-const TEMPLATE_PATH = path.join(PAGES_DIR, 'mean', 'readme.md');
+const PAGES_DIR = path.join(ROOT, 'ui-coding');
+// const TEMPLATE_PATH = path.join(PAGES_DIR, 'mean', 'readme.md');
 
 const names = [
-  'Unique Array',
-  'Type Utilities',
-  'Singleton',
-  'Range Right',
-  'Range',
-  'Once',
-  'Object Map',
-  'Min By',
-  'Max By',
-  'Intersection',
-  'In Range',
-  'Get',
-  'Function prototype call',
-  'Function.prototype.apply',
-  'From Pairs',
-  'Find Last Index',
-  'Find Index',
-  'Fill'
+  'stopwatch',
+  'signup form',
+  'pixel art',
 ];
 
 function toKebab(s) {
@@ -45,7 +30,7 @@ function titleCase(s) {
 }
 
 async function run() {
-  const templateRaw = await fs.readFile(TEMPLATE_PATH, 'utf8');
+  // const templateRaw = await fs.readFile(TEMPLATE_PATH, 'utf8');
   const unique = Array.from(new Set(names.map((n) => n.trim())));
   let created = 0;
 
@@ -55,12 +40,12 @@ async function run() {
     await fs.mkdir(dir, { recursive: true });
 
     const tsPath = path.join(dir, `${kebab}.ts`);
-    const testPath = path.join(dir, `${kebab}.test.ts`);
+    // const testPath = path.join(dir, `${kebab}.test.ts`);
     const readmePath = path.join(dir, 'readme.md');
     const solutionPath = path.join(dir, 'solution.md');
 
     await fs.writeFile(tsPath, '');
-    await fs.writeFile(testPath, '');
+    // await fs.writeFile(testPath, '');
     await fs.writeFile(solutionPath, '');
     await fs.writeFile(readmePath, '');
 
