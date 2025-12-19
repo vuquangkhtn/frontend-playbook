@@ -6,19 +6,6 @@ const PAGES_DIR = path.join(ROOT, 'ui-coding');
 // const TEMPLATE_PATH = path.join(PAGES_DIR, 'mean', 'readme.md');
 
 const names = [
-  'job board',
-  'image carousel ii',
-  'image carousel',
-  'connect four',
-  'birth year histogram',
-  'tic tac toe',
-  'progress bar iii',
-  'digital clock',
-  'traffic light',
-  'todo list',
-  'tab iii',
-  'tab ii',
-  'star rating',
   'progress bar ii',
   'modal dialog iii',
   'modal dialog ii',
