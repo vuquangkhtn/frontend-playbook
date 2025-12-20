@@ -18,8 +18,7 @@ Inspect the rendered HTML to see that the right attributes were added to the DOM
 You can go a step further by using accessibility testing tools like axe to validate the a11y of the elements.
 The resulting DOM should be similar to:
 
-
-```js
+```html
 <div aria-label="Files Explorer" role="tree">
   <ul role="group">
     <li
@@ -234,5 +233,96 @@ export default function FileList({
     </ul>
   );
 }
+
+```
+
+App.tsx
+```js
+import FileExplorer from './FileExplorer';
+
+export default function App() {
+  const data = [
+    {
+      id: 1,
+      name: 'README.md',
+    },
+    {
+      id: 2,
+      name: 'Documents',
+      children: [
+        {
+          id: 3,
+          name: 'Word.doc',
+        },
+        {
+          id: 4,
+          name: 'Powerpoint.ppt',
+        },
+      ],
+    },
+    {
+      id: 5,
+      name: 'Downloads',
+      children: [
+        {
+          id: 6,
+          name: 'unnamed.txt',
+        },
+        {
+          id: 7,
+          name: 'Misc',
+          children: [
+            {
+              id: 8,
+              name: 'foo.txt',
+            },
+            {
+              id: 9,
+              name: 'bar.txt',
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  return <FileExplorer data={data} />;
+}
+
+```
+
+```css
+
+```css
+body {
+  font-family: sans-serif;
+}
+
+.file-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 16px;
+}
+
+.file-item {
+  padding: 0;
+}
+
+.file-item-button {
+  background-color: transparent;
+  border: none;
+  line-height: 1.5;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+.file-item-button--directory {
+  display: flex;
+  gap: 4px;
+  font-weight: bold;
+}
+
+```
 
 ```

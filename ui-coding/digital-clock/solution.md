@@ -232,7 +232,7 @@ export default function App() {
 ```
 
 style.css
-```js
+```css
 body {
   font-family: sans-serif;
 }

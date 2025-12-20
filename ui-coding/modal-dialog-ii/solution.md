@@ -31,7 +31,37 @@ Dialog – Radix Primitives
 Dialog | Reach UI
 Dialog - Headless UI
 
+App.ts
+```js
+import { useState } from 'react';
+import ModalDialog from './ModalDialog';
 
+export default function App() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setOpen(true)}>
+        Show modal
+      </button>
+      <ModalDialog
+        open={open}
+        title="Modal Title"
+        onClose={() => {
+          setOpen(false);
+        }}>
+        One morning, when Gregor Samsa woke from troubled
+        dreams, he found himself transformed in his bed into
+        a horrible vermin. He lay on his armour-like back,
+        and if he lifted his head a little he could see his
+        brown belly, slightly domed and divided by arches
+        into stiff sections.
+      </ModalDialog>
+    </div>
+  );
+}
+
+```
 
 ```js
 import { ComponentProps, useId } from 'react';
@@ -84,3 +114,37 @@ function ModalDialogImpl({
 
 ```
 
+
+```css
+body {
+  font-family: sans-serif;
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  inset: 0;
+  position: fixed;
+
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  padding: 20px;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+
+  background-color: white;
+  padding: 24px;
+}
+
+.modal-title {
+  margin: 0;
+}
+
+```

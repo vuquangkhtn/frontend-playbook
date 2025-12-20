@@ -134,7 +134,7 @@ export default function TrafficLight({
 ```
 
 style.css
-```js
+```css
 body {
   font-family: sans-serif;
 }
