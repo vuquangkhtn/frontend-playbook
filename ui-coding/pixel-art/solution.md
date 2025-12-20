@@ -48,7 +48,7 @@ Since each canvas cell is a <button>, you can Tab through them and use Space to 
 
 
 App
-```
+```js
 import { useState } from 'react';
 import Canvas from './Canvas';
 import Toolbar from './Toolbar';
@@ -74,7 +74,7 @@ export default function App() {
 ```
 
 Canvas
-```
+```js
 import { useState } from 'react';
 
 import Cell from './Cell';
@@ -136,7 +136,7 @@ export default function Canvas({
 ```
 
 Cell
-```
+```js
 import { COLORS, Color } from './colors';
 
 type Props = Readonly<{
@@ -167,7 +167,7 @@ export default function Cell({
 ```
 
 color
-```
+```js
 export const COLORS = {
   white: '#fff',
   gray: '#e9ecef',
@@ -186,7 +186,7 @@ export type Color = keyof typeof COLORS;
 export type Mode = 'draw' | 'erase';
 ```
 toolbar
-```
+```js
 import { COLORS, Color, Mode } from './colors';
 
 type Props = Readonly<{
@@ -268,4 +268,75 @@ export default function Toolbar({
     </div>
   );
 }
+```
+
+```css
+body {
+  font-family: sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid__row {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.grid__cell {
+  --cell-size: 20px;
+
+  height: var(--cell-size);
+  width: var(--cell-size);
+  border: 0;
+  flex-shrink: 0;
+  background-color: transparent;
+}
+
+.grid__row--even .grid__cell:nth-child(odd),
+.grid__row--odd .grid__cell:nth-child(even) {
+  background-color: #e9ecef;
+}
+
+.toolbar {
+  display: flex;
+  gap: 20px;
+}
+
+.toolbar .toolbar__mode {
+  height: 36px;
+  background-color: transparent;
+  border: 2px solid black;
+  font-size: 14px;
+}
+
+.toolbar .toolbar__mode--selected {
+  background-color: black;
+  color: white;
+}
+
+.toolbar .toolbar__color-picker {
+  display: flex;
+}
+
+.toolbar .toolbar__color {
+  --size: 20px;
+
+  width: var(--size);
+  height: var(--size);
+  border: 2px solid transparent;
+}
+
+.toolbar .toolbar__color--selected {
+  border: 2px solid black;
+}
+
 ```

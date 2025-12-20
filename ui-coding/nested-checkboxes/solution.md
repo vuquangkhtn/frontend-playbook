@@ -110,3 +110,311 @@ Test with an empty data set to ensure the component handles it gracefully.
 User interactions:
 Verify that checkboxes can be toggled using both mouse clicks and keyboard interactions (space bar when focused).
 Test tabbing through the checkboxes to ensure proper focus management.
+
+App.tsx
+```js
+import Checkboxes from './Checkboxes';
+
+export default function App() {
+  const checkboxesData = [
+    {
+      id: 1,
+      name: 'Electronics',
+      checked: false,
+      children: [
+        {
+          id: 2,
+          name: 'Mobile phones',
+          checked: false,
+          children: [
+            {
+              id: 3,
+              name: 'iPhone',
+              checked: false,
+            },
+            {
+              id: 4,
+              name: 'Android',
+              checked: false,
+            },
+          ],
+        },
+        {
+          id: 5,
+          name: 'Laptops',
+          checked: false,
+          children: [
+            {
+              id: 6,
+              name: 'MacBook',
+              checked: false,
+            },
+            {
+              id: 7,
+              name: 'Surface Pro',
+              checked: false,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 8,
+      name: 'Books',
+      checked: false,
+      children: [
+        {
+          id: 9,
+          name: 'Fiction',
+          checked: false,
+        },
+        {
+          id: 10,
+          name: 'Non-fiction',
+          checked: false,
+        },
+      ],
+    },
+    {
+      id: 11,
+      name: 'Toys',
+      checked: false,
+    },
+  ];
+
+  return (
+    <div>
+      <Checkboxes defaultCheckboxData={checkboxesData} />
+    </div>
+  );
+}
+```
+
+```js
+import { useState } from 'react';
+import CheckboxList, { CheckboxItem } from './CheckboxList';
+
+/**
+ * Recursively set descendants of the modified checkbox
+ * to the new value.
+ */
+function updateCheckboxAndDescendants(
+  checkboxItem: CheckboxItem,
+  checked: boolean,
+) {
+  checkboxItem.checked = checked;
+  if (!checkboxItem.children) {
+    return;
+  }
+
+  checkboxItem.children.forEach((childItem) =>
+    updateCheckboxAndDescendants(childItem, checked),
+  );
+}
+
+/**
+ * Update checkbox states based on the modified checkbox's new state.
+ * Only direct ancestors of the modified checkbox are affected.
+ */
+function resolveCheckboxStates(
+  checkboxItem: CheckboxItem,
+  indices: ReadonlyArray<number>,
+) {
+  if (indices.length > 0 && checkboxItem.children) {
+    resolveCheckboxStates(
+      checkboxItem.children[indices[0]],
+      indices.slice(1),
+    );
+  }
+
+  if (!checkboxItem.children) {
+    return;
+  }
+
+  // Determine new checkbox state based on children.
+  const checkedChildren = checkboxItem.children.reduce(
+    (total, item) => total + Number(item.checked === true),
+    0,
+  );
+  const uncheckedChildren = checkboxItem.children.reduce(
+    (total, item) => total + Number(item.checked === false),
+    0,
+  );
+
+  if (checkedChildren === checkboxItem.children.length) {
+    checkboxItem.checked = true;
+  } else if (
+    uncheckedChildren === checkboxItem.children.length
+  ) {
+    checkboxItem.checked = false;
+  } else {
+    checkboxItem.checked = 'indeterminate';
+  }
+}
+
+export default function Checkboxes({
+  defaultCheckboxData,
+}: Readonly<{
+  defaultCheckboxData: ReadonlyArray<CheckboxItem>;
+}>) {
+  const [checkboxData, setCheckboxData] = useState(
+    defaultCheckboxData,
+  );
+
+  return (
+    <CheckboxList
+      items={checkboxData}
+      onCheck={(checked, indices) => {
+        // Simple way to make a clone.
+        const newCheckboxData = JSON.parse(
+          JSON.stringify(checkboxData),
+        );
+
+        const nonFirstLevelIndices = indices.slice(1);
+        const modifiedCheckboxItem =
+          nonFirstLevelIndices.reduce(
+            (modifiedItem, index) =>
+              modifiedItem.children[index],
+            newCheckboxData[indices[0]],
+          );
+
+        updateCheckboxAndDescendants(
+          modifiedCheckboxItem,
+          checked,
+        );
+        resolveCheckboxStates(
+          newCheckboxData[indices[0]],
+          nonFirstLevelIndices,
+        );
+
+        setCheckboxData(newCheckboxData);
+      }}
+    />
+  );
+}
+```
+
+```js
+import {
+  InputHTMLAttributes,
+  useEffect,
+  useId,
+  useRef,
+} from 'react';
+
+export type CheckboxValue = boolean | 'indeterminate';
+
+export default function CheckboxInput({
+  checked,
+  label,
+  ...props
+}: Readonly<{
+  checked: CheckboxValue;
+  label: string;
+}> &
+  Omit<InputHTMLAttributes<HTMLInputElement>, 'checked'>) {
+  const id = useId();
+  const ref = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    ref.current.indeterminate = checked === 'indeterminate';
+  }, [checked]);
+
+  return (
+    <div className="checkbox">
+      <input
+        id={id}
+        ref={ref}
+        type="checkbox"
+        checked={
+          checked === true || checked === false
+            ? checked
+            : false
+        }
+        {...props}
+      />
+      <label htmlFor={id}>{label}</label>
+    </div>
+  );
+}
+
+```
+
+```
+import CheckboxInput, {
+  CheckboxValue,
+} from './CheckboxInput';
+
+export interface CheckboxItem {
+  id: number;
+  name: string;
+  checked: CheckboxValue;
+  children?: CheckboxItem[];
+}
+
+export default function CheckboxList({
+  items,
+  onCheck,
+}: Readonly<{
+  items: ReadonlyArray<CheckboxItem>;
+  onCheck: (
+    value: boolean,
+    indices: ReadonlyArray<number>,
+  ) => void;
+}>) {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={item.id}>
+          <div>
+            <CheckboxInput
+              checked={item.checked}
+              label={item.name}
+              onChange={(event) => {
+                onCheck(event.target.checked, [index]);
+              }}
+            />
+          </div>
+          {item.children && item.children.length > 0 && (
+            <CheckboxList
+              items={item.children}
+              onCheck={(newValue, indices) => {
+                onCheck(newValue, [index, ...indices]);
+              }}
+            />
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+```
+
+```css
+body {
+  font-family: sans-serif;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 20px;
+}
+
+li {
+  padding: 0;
+}
+
+.checkbox {
+  display: inline-flex;
+  line-height: 1.5;
+  gap: 4px;
+  font-size: 16px;
+}
+
+```

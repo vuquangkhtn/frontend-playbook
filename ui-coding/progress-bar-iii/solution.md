@@ -113,3 +113,43 @@ export default function App() {
 }
 
 ```
+
+```css
+body {
+  font-family: sans-serif;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.bar {
+  background-color: #ccc;
+  height: 8px;
+}
+
+.bar-contents {
+  background-color: green;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition-duration: 2000ms;
+  transition-property: transform;
+  transition-timing-function: linear;
+}
+
+.bar-contents--filled {
+  transform: scaleX(1);
+}
+
+
+```

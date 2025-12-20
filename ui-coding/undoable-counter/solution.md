@@ -174,3 +174,23 @@ export default function UndoableCounter() {
 }
 
 ```
+
+```css
+body {
+  font-family: sans-serif;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.counter {
+  font-size: 24px;
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+```

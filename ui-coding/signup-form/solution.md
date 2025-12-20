@@ -196,3 +196,38 @@ async function submitForm(
 })();
 
 ```
+
+```css
+body {
+  font-family: sans-serif;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+}
+
+label {
+  font-size: 12px;
+}
+
+input {
+  display: block;
+}
+
+input:focus {
+  outline: 2px solid royalblue;
+}
+
+.error {
+  color: red;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.hidden {
+  display: none;
+}
+
+```
