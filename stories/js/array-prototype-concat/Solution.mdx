@@ -1,0 +1,96 @@
+---
+title: Array.prototype.concat — Solution
+---
+
+## Solution Explanation
+
+The key to implementing `Array.prototype.concat` is understanding that:
+
+1. **Create a copy** of the original array using the spread operator (`[...this]`)
+2. **Iterate through arguments** and check each one
+3. **Spread arrays** into the new array, but keep primitives as individual elements
+4. **Return the new array** without modifying the original
+
+This ensures the polyfill operates on a copy of the array, leaving the original unchanged.
+
+## Simple Solution
+
+```typescript
+interface Array<T> {
+  myConcat(...items: Array<T | Array<T>>): Array<T>;
+}
+
+Array.prototype.myConcat = function (...items) {
+  const newArray = [...this];
+
+  for (const item of items) {
+    if (Array.isArray(item)) {
+      newArray.push(...item);
+    } else {
+      newArray.push(item);
+    }
+  }
+
+  return newArray;
+};
+```
+
+## Specification-Compliant Solution
+
+Here's a solution based on the ECMAScript specification that properly handles sparse arrays:
+
+```typescript
+interface Array<T> {
+  myConcat(...items: Array<T | Array<T>>): Array<T>;
+}
+
+Array.prototype.myConcat = function (...items) {
+  const A = Array.from(this);
+  let n = A.length;
+
+  items.forEach((e) => {
+    // The actual spec checks for the `Symbol.isConcatSpreadable` property.
+    if (Array.isArray(e)) {
+      const len = e.length;
+      let k = 0;
+      while (k < len) {
+        // Ignore index if value is not defined (sparse arrays)
+        const exists = Object.hasOwn(e, k);
+        if (exists) {
+          const subElement = e[k];
+          A[n] = subElement;
+        }
+        n += 1;
+        k += 1;
+      }
+    } else {
+      A[n] = e;
+      n += 1;
+    }
+  });
+
+  return A;
+};
+```
+
+### Key Differences
+
+- Uses `Array.from()` for better array handling
+- Uses `Object.hasOwn()` to properly handle sparse arrays
+- Respects empty slots in sparse arrays (doesn't copy them)
+- More closely follows the official ECMAScript specification
+
+## Edge Cases
+
+- ✅ **Sparse arrays**: Empty slots are preserved correctly
+  ```js
+  [1, , 3].myConcat(4, 5) // [1, <empty>, 3, 4, 5]
+  ```
+- ✅ **No arguments**: Returns a copy of the array
+- ✅ **Empty arrays**: Can be concatenated without issues
+- ✅ **Mixed types**: Both arrays and primitives handled correctly
+
+## Resources
+
+- [Array.prototype.concat - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat)
+- [Array.prototype.concat - ECMAScript Specification](https://tc39.es/ecma262/#sec-array.prototype.concat)

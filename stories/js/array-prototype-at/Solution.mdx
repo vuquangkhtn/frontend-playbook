@@ -1,26 +1,26 @@
 ---
-title: Array Prototype At — Solution
+title: Array.prototype.at — Solution
 ---
 
-```markdown
-Solution
-The Array.prototype.at method allows accessing elements of an array using positive or negative indices, similar to how Python's list indexing works which is convenient when accessing items from the back. Traditionally, to access the last item you'd do arr[arr.length - 1], but with this method you can do arr.at(-1).
+## Solution Explanation
 
-For indices that are out of bounds (defined as index < -array.length || index >= array.length), undefined is returned. To safely access the index, we can allow the index to "wrap around" by adding array.length to indices so that negative indices will become the positive counterpart. However, for positive values, this will now cause the index to exceed the array range. Hence we modulo by array.length to get the index back within the range.
+The `Array.prototype.at()` method allows accessing elements of an array using both positive and negative indices, similar to Python's list indexing. This is convenient when accessing items from the back of the array.
 
-Note that the specifications state that the index is converted to an integer first, so Array.prototype.at works even for string versions of indices.
+Traditionally, to access the last item you'd do `arr[arr.length - 1]`, but with this method you can simply do `arr.at(-1)`.
 
+## How It Works
 
-JavaScript
+For indices that are **out of bounds** (defined as `index < -array.length || index >= array.length`), `undefined` is returned.
 
-TypeScript
+To handle both positive and negative indices:
 
-Open files in workspace
+1. We add `array.length` to negative indices to convert them to their positive counterpart
+2. We use the modulo operator to keep indices within the array range
+3. The index is converted to an integer first, so `Array.prototype.at` works even for string versions of indices
 
-/**
- * @param {number} index
- * @return {any | undefined}
- */
+## Simple Solution
+
+```typescript
 Array.prototype.myAt = function (index) {
   const len = this.length;
   if (index < -len || index >= len) {
@@ -29,23 +29,13 @@ Array.prototype.myAt = function (index) {
 
   return this[(index + len) % len];
 };
-Edge cases
-Using non-integer index such as [42, 79].at('1').
-One-liner solution
-You can cheat the autograder by doing this:
+```
 
+## Specification-Compliant Solution
 
-Array.prototype.myAt = Array.prototype.at;
-Spec solution
-Here's a solution that is based off the Array.prototype.at ECMAScript specification.
+Here's a solution based on the ECMAScript specification:
 
-
-Open files in workspace
-
-/**
- * @param {number} index
- * @return {any | undefined}
- */
+```typescript
 Array.prototype.myAt = function (index) {
   const len = this.length;
   const relativeIndex = Number(index);
@@ -57,7 +47,21 @@ Array.prototype.myAt = function (index) {
 
   return this[k];
 };
-Resources
-Array.prototype.at | MDN
-Array.prototype.at ECMAScript specification
 ```
+
+### Key Differences
+
+- Explicitly converts the index to a number
+- Separately calculates the actual index (`k`)
+- Returns explicit `undefined` for clarity
+
+## Edge Cases
+
+- ✅ Non-integer indices like `[42, 79].at('1')` are converted to numbers
+- ✅ Empty arrays return `undefined`
+- ✅ Sparse arrays preserve their gaps
+
+## Resources
+
+- [Array.prototype.at - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at)
+- [Array.prototype.at - ECMAScript Specification](https://tc39.es/ecma262/#sec-array.prototype.at)

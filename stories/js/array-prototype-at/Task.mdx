@@ -2,23 +2,35 @@
 title: Array Prototype At
 ---
 
-# Array Prototype At
+# Array.prototype.at
 
-Array.prototype.at takes an integer value and returns the item at that index, allowing for positive and negative integers. Negative integers count back from the last item in the array.
+Implement the `Array.prototype.at()` method, which takes an integer value and returns the item at that index, allowing for positive and negative integers. Negative integers count back from the last item in the array.
 
-Implement Array.prototype.at. To avoid overwriting the actual Array.prototype.at, we shall instead implement it as Array.prototype.myAt.
+To avoid overwriting the actual `Array.prototype.at`, implement it as `Array.prototype.myAt` instead.
 
-Examples
+## Examples
 
 ```js
 const arr = [42, 79];
-arr.myAt(0); // 42
-arr.myAt(1); // 79
-arr.myAt(2); // undefined
 
-arr.myAt(-1); // 79
-arr.myAt(-2); // 42
-arr.myAt(-3); // undefined
+// Positive indices
+arr.myAt(0);  // 42 (first element)
+arr.myAt(1);  // 79 (second element)
+arr.myAt(2);  // undefined (out of range)
+
+// Negative indices
+arr.myAt(-1); // 79 (last element)
+arr.myAt(-2); // 42 (second to last)
+arr.myAt(-3); // undefined (out of range)
 ```
-Notes
-There are some tricky cases to handle. You are recommended to read the specification for Array.prototype.at on MDN Docs before attempting.
+
+## Key Features
+
+- ✅ Supports positive indices (from the start)
+- ✅ Supports negative indices (from the end)
+- ✅ Returns `undefined` for out-of-range indices
+- ✅ Works with any array size
+
+## Important Notes
+
+There are some tricky edge cases to handle. You are recommended to read the specification for [Array.prototype.at on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at) before attempting.

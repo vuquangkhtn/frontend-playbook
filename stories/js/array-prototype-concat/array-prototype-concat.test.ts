@@ -1,4 +1,4 @@
-import './array-concat';
+import './array-prototype-concat.solution';
 
 describe('Array.prototype.myConcat', () => {
   test('empty arguments', () => {

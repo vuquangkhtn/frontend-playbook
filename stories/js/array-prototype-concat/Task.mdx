@@ -1,0 +1,42 @@
+---
+title: Array Prototype Concat
+---
+
+# Array.prototype.concat
+
+Implement the `Array.prototype.concat()` method, which is used to merge two or more arrays. This method does not change the existing arrays, but instead returns a new array.
+
+To avoid overwriting the actual `Array.prototype.concat`, implement it as `Array.prototype.myConcat` instead.
+
+## Examples
+
+```js
+// Single array argument
+[1, 2, 3].myConcat([4, 5, 6]);  // [1, 2, 3, 4, 5, 6]
+
+// Multiple primitive arguments
+[1, 2, 3].myConcat(4, 5, 6);    // [1, 2, 3, 4, 5, 6]
+
+// Mixed arguments
+[1, 2, 3].myConcat(4, [5, 6]);  // [1, 2, 3, 4, 5, 6]
+
+// Multiple array arguments
+[1, 2].myConcat([3], [4, 5]);   // [1, 2, 3, 4, 5]
+
+// No arguments
+[1, 2, 3].myConcat();           // [1, 2, 3]
+```
+
+## Key Features
+
+- ✅ Accepts multiple arguments (variadic)
+- ✅ Spreads arrays into the result
+- ✅ Keeps primitive values as-is
+- ✅ Returns a new array without modifying the original
+- ✅ Works with mixed argument types
+
+## Important Notes
+
+As seen from the examples, `Array.prototype.concat` accepts a variadic number of arguments and depending on whether the argument is a primitive or an array/array-like object, they are handled differently.
+
+You are not required to handle arguments with the property `Symbol.isConcatSpreadable` set, but you are recommended to read the specification for [Array.prototype.concat on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat) before attempting.
