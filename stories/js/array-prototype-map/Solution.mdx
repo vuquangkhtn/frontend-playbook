@@ -3,13 +3,7 @@ This question is pretty straightforward and just tests that you know how to acce
 Solution
 Initialize a new array to store the mapped results. As we loop through the array (via this), call the callback on each array element with the following parameters: element, index, array, and this. This can be done by either using Function.prototype.call or Function.prototype.apply.
 
-
-JavaScript
-
-TypeScript
-
-Open files in workspace
-
+```ts
 /**
  * @template T, U
  * @param { (value: T, index: number, array: Array<T>) => U } callbackFn
@@ -29,6 +23,8 @@ Array.prototype.myMap = function (callbackFn, thisArg) {
 
   return array;
 };
+```
+
 Edge cases
 Passing the index and array to the map callback.
 Calling the map callback with the correct this if thisArg is specified.
@@ -45,14 +41,15 @@ The thisArg doesn't do anything if the callback is defined as an arrow function 
 One-liner solution
 You can cheat the autograder by doing this:
 
-
+```ts
 Array.prototype.myMap = Array.prototype.map;
+```
+
 Spec solution
 Here's a solution that is based off the Array.prototype.map ECMAScript specification.
 
 
-Open files in workspace
-
+```js
 Array.prototype.myMap = function (callbackFn, thisArg) {
   if (
     typeof callbackFn !== 'function' ||
@@ -79,6 +76,26 @@ Array.prototype.myMap = function (callbackFn, thisArg) {
 
   return A;
 };
+
+```
+
+## Key takeaways
+
+The elements of an Array are defined as direct properties, so you can use hasOwn() method to check whether a particular index exists:
+```js
+const fruits = ["Apple", "Banana", "Watermelon", "Orange"];
+Object.hasOwn(fruits, 3); // true ('Orange')
+Object.hasOwn(fruits, 4); // false - not defined
+```
+
+For instance,
+```js
+expect([1, 2, , 4].myMap(square)).toEqual([1, 4, , 16]); // Object.hasOwn(this, arr[2]) -> false
+expect([1, 2, undefined, 4].myMap(square)).toEqual([1, 4, NaN, 16]); // Object.hasOwn(this, arr[2]) -> true
+```
+
+[Checking if an Array index exists](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn#checking_if_an_array_index_exists)
+
 Resources
-Array.prototype.map | MDN
+[Array.prototype.map | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
 Array.prototype.map ECMAScript specification

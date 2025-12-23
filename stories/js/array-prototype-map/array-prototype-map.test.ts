@@ -1,4 +1,4 @@
-import './array-map';
+import './array-prototype-map.solution';
 
 const identity = <T>(element: T) => element;
 const square = (element: any) => element * element;
