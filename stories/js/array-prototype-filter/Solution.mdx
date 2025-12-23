@@ -6,12 +6,7 @@ Initialize a new array to store the filtered results. As we loop through the arr
 If the callback evaluates to true, push the element into the results.
 
 
-JavaScript
-
-TypeScript
-
-Open files in workspace
-
+```ts
 /**
  * @template T
  * @param { (value: T, index: number, array: Array<T>) => boolean } callbackFn
@@ -35,6 +30,8 @@ Array.prototype.myFilter = function (callbackFn, thisArg) {
 
   return results;
 };
+```
+
 Edge cases
 Passing the index and array to the filter callback.
 Invoking the filter callback with the correct this if thisArg is specified.
@@ -51,8 +48,10 @@ The thisArg doesn't do anything if the callback is defined as an arrow function 
 One-liner solution
 You can cheat the autograder by doing this:
 
-
+```ts
 Array.prototype.myFilter = Array.prototype.filter;
+```
+
 Spec solution
 Here's a solution that is based off the Array.prototype.filter ECMAScript specification.
 
@@ -88,6 +87,39 @@ Array.prototype.myFilter = function (callbackFn, thisArg) {
   return A;
 };
 
+```
+
+## Key Takeaway
+### With .call(thisArg, ...):
+
+Explicitly sets the this context when calling the function
+The first argument to .call() becomes this inside the function
+Allows the callback to access a custom this value
+### With callbackFn(...) directly:
+
+In strict mode: this is undefined
+In non-strict mode: this is the global object (window in browsers)
+No way to pass a custom this value
+### Arrow Functions Break This Pattern
+Arrow functions do not have their own this—they inherit it from the enclosing scope. This means:
+```ts
+// Regular function - respects the thisArg
+const isThisProductEven = function (element: number) {
+  return (element * this) % 2 === 0;
+};
+
+[1, 2, 3, 4].myFilter(isThisProductEven, 10)  
+// ✅ Works: this = 10 (set by .call())
+// Returns [1, 2, 3, 4] because 1*10=10 (even), 2*10=20 (even), etc.
+
+// Arrow function - ignores the thisArg
+const isThisProductEvenArrowFn = (element: number) =>
+  (element * this) % 2 === 0;
+
+[1, 2, 3, 4].myFilter(isThisProductEvenArrowFn, 10)  
+// ❌ Doesn't work: this = whatever the outer scope's this is
+// The thisArg=10 is completely ignored
+// Returns [] because this is undefined/global, not 10
 ```
 
 Resources
