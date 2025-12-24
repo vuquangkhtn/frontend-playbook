@@ -1,0 +1,51 @@
+---
+title: Camel Case Keys
+---
+
+# camelCaseKeys
+
+Implement a function `camelCaseKeys` that takes an object (or array of objects) and returns a new object with all its keys converted from snake_case to camelCase.
+
+## Camel Case Format
+
+Camel case is a naming convention where:
+- Words are separated by capitalizing the first letter of each word (except the first)
+- The first letter is lowercase
+- No separators (underscores or hyphens) are used
+
+### Examples
+
+| Input String | Is camelCase? | Notes |
+|---|---|---|
+| `foo` | ✅ Yes | Single word is valid |
+| `fooBar` | ✅ Yes | Correct camel case |
+| `Foo_Bar` | ❌ No | First letter capitalized |
+| `foo_bar` | ❌ No | Contains underscore separator |
+
+## Examples
+
+```js
+camelCaseKeys({ foo_bar: true });
+// { fooBar: true }
+
+camelCaseKeys({ foo_bar: true, bar_baz: { baz_qux: '1' } });
+// { fooBar: true, barBaz: { bazQux: '1' } }
+
+camelCaseKeys([{ baz_qux: true }, { foo: true, bar: [{ foo_bar: 'hello' }] }]);
+// [{ bazQux: true }, { foo: true, bar: [{ fooBar: 'hello' }] }]
+```
+
+## Key Features
+
+- ✅ Converts snake_case keys to camelCase
+- ✅ Handles nested objects recursively
+- ✅ Processes arrays of objects
+- ✅ Returns a new object without modifying the original
+- ✅ Preserves non-object values as-is
+
+## Important Notes
+
+- Input is always a valid, plain JavaScript object or array
+- Only handles snake_case format (no spaces, hyphens, or PascalCase)
+- Creates a new object, doesn't mutate the original
+- Recursively processes nested structures

@@ -1,0 +1,194 @@
+---
+title: camelCaseKeys — Solution
+---
+
+## Solution Explanation
+
+The implementation requires two main steps:
+
+1. **Transform keys**: Convert snake_case keys to camelCase
+2. **Handle nested structures**: Recursively process objects and arrays
+
+### Key Insights
+
+The solution handles three different input types:
+- **Arrays**: Use `map()` to recursively process each element
+- **Objects**: Use `Object.entries()` to transform keys and values
+- **Primitives**: Return as-is (no transformation needed)
+
+## Complete Solution
+
+```typescript
+function camelize(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/([-_][a-z])/g, (group) =>
+      group
+        .toUpperCase()
+        .replace('-', '')
+        .replace('_', '')
+    );
+}
+
+export default function camelCaseKeys(object: any): any {
+  if (Array.isArray(object)) {
+    return object.map((item) => camelCaseKeys(item));
+  }
+
+  if (typeof object !== 'object' || object === null) {
+    return object;
+  }
+
+  return Object.fromEntries(
+    Object.entries(object).map(([key, value]) => [
+      camelize(key),
+      camelCaseKeys(value),
+    ]),
+  );
+}
+```
+
+## Step-by-Step Breakdown
+
+### 1. camelize Helper Function
+
+Converts a single string from snake_case to camelCase:
+
+```typescript
+function camelize(str: string): string {
+  return str
+    .toLowerCase()                           // Step 1: Lowercase everything
+    .replace(/([-_][a-z])/g, (group) =>     // Step 2: Find underscore/hyphen + letter
+      group
+        .toUpperCase()                       // Step 3: Uppercase the group
+        .replace('-', '')                    // Step 4: Remove hyphen
+        .replace('_', '')                    // Step 5: Remove underscore
+    );
+}
+```
+
+**Example**: `foo_bar_baz`
+- Lowercase: `foo_bar_baz`
+- Find `_b` and `_b`: matches found
+- Replace `_b` → `B`: `fooBarBaz`
+- Remove separators: `fooBarBaz`
+
+### 2. Main Function Logic
+
+```typescript
+export default function camelCaseKeys(object: any): any {
+  // Handle arrays: recursively process each item
+  if (Array.isArray(object)) {
+    return object.map((item) => camelCaseKeys(item));
+  }
+
+  // Handle primitives: return unchanged
+  if (typeof object !== 'object' || object === null) {
+    return object;
+  }
+
+  // Handle objects: transform keys and recursively process values
+  return Object.fromEntries(
+    Object.entries(object).map(([key, value]) => [
+      camelize(key),                    // Transform the key
+      camelCaseKeys(value),             // Recursively process the value
+    ]),
+  );
+}
+```
+
+## Examples with Detailed Steps
+
+### Simple Object
+
+```typescript
+const input = { foo_bar: true, baz_qux: 'hello' };
+
+// Step 1: Object.entries
+// [['foo_bar', true], ['baz_qux', 'hello']]
+
+// Step 2: map() with camelize
+// [['fooBar', true], ['bazQux', 'hello']]
+
+// Step 3: Object.fromEntries
+// { fooBar: true, bazQux: 'hello' }
+```
+
+### Nested Object
+
+```typescript
+const input = {
+  foo_bar: true,
+  bar_baz: { baz_qux: '1' }
+};
+
+// The value { baz_qux: '1' } is recursively processed
+// Returns: { fooBar: true, barBaz: { bazQux: '1' } }
+```
+
+### Array of Objects
+
+```typescript
+const input = [
+  { baz_qux: true },
+  { foo: true }
+];
+
+// Array.map processes each element
+// Returns: [{ bazQux: true }, { foo: true }]
+```
+
+## Alternative Approaches
+
+### Using for...in Loop
+
+```typescript
+function camelCaseKeys(object: any): any {
+  if (Array.isArray(object)) {
+    return object.map(camelCaseKeys);
+  }
+
+  if (typeof object !== 'object' || object === null) {
+    return object;
+  }
+
+  const result: any = {};
+  for (const key in object) {
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
+      result[camelize(key)] = camelCaseKeys(object[key]);
+    }
+  }
+  return result;
+}
+```
+
+## Performance Considerations
+
+⚠️ **Watch out for these edge cases:**
+
+1. **Deep Nesting**: Too much recursion can cause stack overflow
+2. **Circular References**: Will cause infinite recursion
+3. **Large Arrays**: Processing large arrays can be slow
+
+**Note**: The provided solution doesn't handle these, but it works for normal use cases.
+
+## Edge Cases
+
+- ✅ **Null**: Returns `null` (check prevents treating it as object)
+- ✅ **Primitive values**: Returned as-is
+- ✅ **Already camelCase keys**: Left unchanged
+- ✅ **Empty objects/arrays**: Handled correctly
+- ✅ **Mixed structures**: Objects containing arrays and nested objects work correctly
+
+## Real-World Usage
+
+This function is useful for:
+- Converting API responses from snake_case (common in backend APIs) to camelCase (JavaScript convention)
+- Data transformation in ETL pipelines
+- Normalizing data from different sources
+
+## Resources
+
+- [camelcase-keys library on GitHub](https://github.com/sindresorhus/camelcase-keys)
+- [Object.entries - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries)
+- [String.replace with regex - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)

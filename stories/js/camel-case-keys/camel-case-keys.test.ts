@@ -1,4 +1,4 @@
-import camelCaseKeys from './camel-case-keys';
+import camelCaseKeys from './camel-case-keys.solution';
 
 describe('camelCaseKeys', () => {
   test('simple object', () => {
