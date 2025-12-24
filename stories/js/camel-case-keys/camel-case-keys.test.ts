@@ -8,10 +8,11 @@ describe('camelCaseKeys', () => {
   });
 
   test('simple object with multiple keys', () => {
-    expect(camelCaseKeys({ foo_bar: true, baz: '1', quz: '2' })).toStrictEqual({
+    expect(camelCaseKeys({ foo_bar: true, baz: '1', quz: '2', foo_12: false })).toStrictEqual({
       baz: '1',
       fooBar: true,
       quz: '2',
+      foo12: false
     });
   });
 

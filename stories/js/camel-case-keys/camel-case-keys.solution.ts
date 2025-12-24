@@ -1,6 +1,6 @@
 function camelize(str) {
   return str.toLowerCase()
-    .replace(/([-_][a-z])/g, group =>
+    .replace(/([-_][a-z0-9])/g, group =>
       group
         .toUpperCase()
         .replace('-', '')
