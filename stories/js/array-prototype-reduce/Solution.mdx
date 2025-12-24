@@ -1,0 +1,134 @@
+---
+title: Array.prototype.reduce — Solution
+---
+
+## Solution Explanation
+
+The key to implementing `reduce` correctly lies in understanding these nuances:
+
+1. **Initial Value Handling**: If no initial value is provided, use the first element as the accumulator and start iteration from index 1
+2. **Callback Parameters**: Pass accumulator, current value, index, and the array to the callback
+3. **Sparse Arrays**: Skip empty slots using `Object.hasOwn()`
+4. **Error Handling**: Throw TypeError if array is empty and no initial value is provided
+
+## Simple Solution
+
+```typescript
+interface Array<T> {
+  myReduce<U>(
+    callbackFn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U,
+    initialValue?: U,
+  ): U;
+}
+
+Array.prototype.myReduce = function (callbackFn, initialValue) {
+  const noInitialValue = initialValue === undefined;
+  const len = this.length;
+
+  if (noInitialValue && len === 0) {
+    throw new TypeError('Reduce of empty array with no initial value');
+  }
+
+  let acc = noInitialValue ? this[0] : initialValue;
+  let startingIndex = noInitialValue ? 1 : 0;
+
+  for (let k = startingIndex; k < len; k++) {
+    if (Object.hasOwn(this, k)) {
+      acc = callbackFn(acc, this[k], k, this);
+    }
+  }
+
+  return acc;
+};
+```
+
+## Specification-Compliant Solution
+
+Here's a solution based on the ECMAScript specification with additional checks:
+
+```typescript
+Array.prototype.myReduce = function (callbackFn, initialValue) {
+  const len = this.length;
+
+  if (typeof callbackFn !== 'function') {
+    throw new TypeError(`${callbackFn} is not a function`);
+  }
+
+  if (len === 0 && initialValue === undefined) {
+    throw new TypeError('Reduce of empty array with no initial value');
+  }
+
+  let k = 0;
+  let accumulator = undefined;
+
+  if (initialValue !== undefined) {
+    accumulator = initialValue;
+  } else {
+    let kPresent = false;
+    while (!kPresent && k < len) {
+      // Ignore index if value is not defined (sparse arrays)
+      kPresent = Object.hasOwn(this, k);
+      if (kPresent) {
+        accumulator = this[k];
+      }
+      k = k + 1;
+    }
+
+    if (!kPresent) {
+      throw new TypeError('Reduce of empty array with no initial value');
+    }
+  }
+
+  while (k < len) {
+    const kPresent = Object.hasOwn(this, k);
+    if (kPresent) {
+      const kValue = this[k];
+      accumulator = callbackFn(accumulator, kValue, k, this);
+    }
+    k = k + 1;
+  }
+
+  return accumulator;
+};
+```
+
+## Common Patterns
+
+### Sum Values
+```typescript
+[1, 2, 3, 4].myReduce((sum, val) => sum + val, 0) // 10
+```
+
+### Product of Values
+```typescript
+[1, 2, 3, 4].myReduce((prod, val) => prod * val, 1) // 24
+```
+
+### Group by Key
+```typescript
+[{ name: 'Alice', age: 25 }, { name: 'Bob', age: 30 }]
+  .myReduce((acc, person) => ({ ...acc, [person.name]: person.age }), {})
+// { Alice: 25, Bob: 30 }
+```
+
+## Edge Cases to Handle
+
+- ✅ **Empty array with no initial value**: Throws TypeError
+- ✅ **Empty array with initial value**: Returns initial value
+- ✅ **Single element with initial value**: Returns callback result
+- ✅ **Single element without initial value**: Returns that element
+- ✅ **Sparse arrays**: Empty slots are skipped
+- ✅ **Array mutation**: Changes are reflected if they occur before the index is visited
+
+## Important Notes on Mutation
+
+⚠️ **Mutating the array during reduce is dangerous:**
+
+- Elements appended after reduce starts will **not** be visited
+- If existing elements change before being visited, the **new value** is used
+- Elements deleted before being visited will **not** be processed
+
+## Resources
+
+- [Array.prototype.reduce - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)
+- [Array.prototype.reduce - ECMAScript Specification](https://tc39.es/ecma262/#sec-array.prototype.reduce)

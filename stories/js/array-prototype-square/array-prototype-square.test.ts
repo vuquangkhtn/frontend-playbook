@@ -1,4 +1,4 @@
-import './array-square';
+import './array-prototype-square.solution';
 
 describe('Array.prototype.square', () => {
   test('empty array', () => {

@@ -1,0 +1,37 @@
+---
+title: Array Prototype Square
+---
+
+# Array.prototype.square
+
+Implement a custom `Array.prototype.square()` method that creates a new array with the results of squaring every element in the original array.
+
+## Difficulty
+
+⭐ Easy
+
+## Description
+
+Create a function that squares each number in an array without modifying the original array. This is a simple wrapper around array transformation.
+
+## Examples
+
+```ts
+[-2].square();            // [4]
+[1, 2, 3, 4].square();    // [1, 4, 9, 16]
+[0, -3, 4, 5].square();   // [0, 9, 16, 25]
+```
+
+## Requirements
+
+- ✅ The original array should **not** be modified
+- ✅ Assume the array only contains numbers
+- ✅ Assume the array will not be sparse (no empty slots)
+- ✅ Return a new array with squared values
+
+## Key Concepts
+
+- Understanding `this` in Array prototype methods
+- Creating and populating new arrays
+- Array element access via index
+- Non-destructive array transformation

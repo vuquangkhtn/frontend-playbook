@@ -1,0 +1,35 @@
+---
+title: Array Prototype Reduce
+---
+
+# Array.prototype.reduce
+
+Implement the `Array.prototype.reduce()` method, which "reduces" elements in an array by calling a "reducer" callback function on each element in order. The callback processes the return value from the calculation on the preceding element, and the final result is a single accumulated value.
+
+To avoid overwriting the actual `Array.prototype.reduce`, implement it as `Array.prototype.myReduce` instead.
+
+## Examples
+
+```js
+[1, 2, 3].myReduce((prev, curr) => prev + curr, 0);    // 6
+[1, 2, 3].myReduce((prev, curr) => prev + curr, 4);    // 10
+['a', 'b', 'c'].myReduce((prev, curr) => prev + curr); // 'abc'
+[1, 2, 3, 4].myReduce((acc, val) => acc * val, 1);     // 24
+```
+
+## Key Features
+
+- ✅ Processes elements left to right
+- ✅ Returns a single accumulated value
+- ✅ Optional initial value (defaults to first element if omitted)
+- ✅ Callback receives: accumulator, current value, index, and array
+- ✅ Skips empty slots in sparse arrays
+
+## Important Notes
+
+There are important nuances to understand:
+
+- If no initial value is supplied, the element at index 0 is used and iteration starts from index 1
+- The callback receives four arguments: `(accumulator, currentValue, currentIndex, array)`
+- An error is thrown if the array is empty and no initial value is provided
+- You are recommended to read the [Array.prototype.reduce specification on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) before attempting.

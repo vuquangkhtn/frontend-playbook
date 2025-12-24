@@ -1,0 +1,109 @@
+---
+title: Array.prototype.square — Solution
+---
+
+## Solution Explanation
+
+This is a straightforward problem that tests:
+1. Understanding of the `this` keyword in Array.prototype methods
+2. Accessing array values via index
+3. Creating and returning a new array without modifying the original
+
+## Loop-Based Solution
+
+```typescript
+interface Array<T> {
+  square(): Array<number>;
+}
+
+Array.prototype.square = function () {
+  if (!Array.isArray(this)) {
+    throw new Error('Not an array');
+  }
+
+  const length = this.length;
+  const results = new Array(length);
+
+  for (let i = 0; i < length; i++) {
+    results[i] = this[i] * this[i];
+  }
+
+  return results;
+};
+```
+
+## Elegant Solution Using map()
+
+The simplest and most idiomatic approach uses `Array.prototype.map()`:
+
+```typescript
+Array.prototype.square = function () {
+  return this.map((num) => num * num);
+};
+```
+
+Or with the exponentiation operator:
+
+```typescript
+Array.prototype.square = function () {
+  return this.map((num) => num ** 2);
+};
+```
+
+## Step-by-Step Breakdown
+
+1. **Create new array**: `const results = new Array(length)` allocates space
+2. **Iterate through original array**: `for (let i = 0; i < length; i++)`
+3. **Square each element**: `results[i] = this[i] * this[i]`
+4. **Return new array**: The original remains unchanged
+
+## Examples
+
+```typescript
+// Example 1: Positive numbers
+[1, 2, 3, 4].square()  // [1, 4, 9, 16]
+
+// Example 2: Negative numbers  
+[-1, -2, -3].square()  // [1, 4, 9]
+
+// Example 3: Mixed
+[-2, 0, 3, 5].square() // [4, 0, 9, 25]
+
+// Example 4: Decimals
+[1.5, 2.5].square()    // [2.25, 6.25]
+```
+
+## Edge Cases
+
+- ✅ **Empty array**: Returns empty array `[]`
+- ✅ **Single element**: Returns array with one squared value
+- ✅ **Multiple elements**: Squares all elements correctly
+- ✅ **Negative numbers**: Squaring removes the negative sign
+- ✅ **Zero**: Remains zero when squared
+
+## Performance Comparison
+
+| Approach | Speed | Readability |
+|----------|-------|-------------|
+| Loop-based | ⚡⚡ Fastest | Medium |
+| `map()` | ⚡ Slightly slower | High |
+| `map()` with `**2` | ⚡ Slightly slower | High |
+
+For most use cases, **use `map()`** for readability. The performance difference is negligible.
+
+## Why Use Array.prototype?
+
+Adding methods to `Array.prototype` is generally **not recommended** for production code due to:
+- Potential conflicts with future JavaScript features
+- Risk of polluting the global namespace
+- Compatibility issues with external libraries
+
+However, for **educational purposes** and **coding challenges**, it's a great way to understand:
+- Prototype-based inheritance
+- The `this` keyword
+- Array manipulation
+
+## Resources
+
+- [Array.prototype.map - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+- [JavaScript Prototypes - MDN](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
