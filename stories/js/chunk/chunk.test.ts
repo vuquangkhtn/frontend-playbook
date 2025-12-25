@@ -1,4 +1,4 @@
-import chunk from './chunk';
+import chunk from './chunk.solution';
 
 describe('chunk', () => {
   test('empty array', () => {

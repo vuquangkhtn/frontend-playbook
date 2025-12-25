@@ -1,0 +1,210 @@
+---
+title: chunk() — Solution
+---
+
+## Solution Explanation
+
+The goal is to split an array into groups of a specified size. There are two main approaches:
+
+1. **Using index jumping**: More elegant and concise
+2. **Using a tracking variable**: More explicit but requires more code
+
+## Solution 1: Using slice() (Recommended)
+
+This is the most elegant approach, jumping by `size` elements each iteration:
+
+```typescript
+export default function chunk<T>(
+  array: Array<T>,
+  size = 1
+): Array<Array<T>> {
+  if (!Array.isArray(array) || size < 1) {
+    return [];
+  }
+
+  const result: Array<Array<T>> = [];
+
+  for (let i = 0; i < array.length; i += size) {
+    const chunk = array.slice(i, i + size);
+    result.push(chunk);
+  }
+
+  return result;
+}
+```
+
+### How It Works
+
+1. **Validate input**: Check that array is valid and size is positive
+2. **Initialize result**: Create an empty array to store chunks
+3. **Loop with step**: Increment loop counter by `size` each iteration
+4. **Extract chunks**: Use `slice(i, i + size)` to get the next chunk
+5. **Return result**: Return the array of chunks
+
+### Step-by-Step Example
+
+```typescript
+const input = [1, 2, 3, 4, 5];
+const size = 2;
+
+// i=0: slice(0, 2) → [1, 2]
+// i=2: slice(2, 4) → [3, 4]
+// i=4: slice(4, 6) → [5]
+// Result: [[1, 2], [3, 4], [5]]
+```
+
+## Solution 2: Using push() and Tracking Variable
+
+A more explicit approach that manually builds each chunk:
+
+```typescript
+export default function chunk<T>(
+  array: Array<T>,
+  size = 1
+): Array<Array<T>> {
+  if (!Array.isArray(array) || size < 1) {
+    return [];
+  }
+
+  const result: Array<Array<T>> = [];
+  let currentChunk: Array<T> = [];
+
+  for (let i = 0; i < array.length; i++) {
+    currentChunk.push(array[i]);
+
+    // Check if chunk is full or this is the last element
+    if (currentChunk.length === size || i === array.length - 1) {
+      result.push(currentChunk);
+      currentChunk = []; // Reset for next chunk
+    }
+  }
+
+  return result;
+}
+```
+
+### How It Works
+
+1. **Initialize tracking**: Create empty array for current chunk
+2. **Push elements**: Add each element to the current chunk
+3. **Check completion**: When chunk reaches size OR end of array is reached
+4. **Save chunk**: Push complete chunk to result
+5. **Reset**: Create new empty chunk for next iteration
+
+### Comparison of Approaches
+
+| Aspect | slice() | push() |
+|--------|---------|--------|
+| Code length | Shorter | Longer |
+| Readability | More elegant | More explicit |
+| Performance | Slightly slower (copying) | Slightly faster |
+| Memory | Creates subarrays | Reuses same array reference |
+| Recommended | ✅ Yes | For educational purposes |
+
+**Recommendation**: Use the `slice()` approach for production code due to cleaner logic and easier to understand.
+
+## Examples
+
+### Basic Usage
+
+```typescript
+chunk([1, 2, 3, 4, 5], 2)
+// [[1, 2], [3, 4], [5]]
+
+chunk(['a', 'b', 'c', 'd', 'e'], 3)
+// [['a', 'b', 'c'], ['d', 'e']]
+```
+
+### Edge Cases
+
+```typescript
+// Default size (1)
+chunk([1, 2, 3])
+// [[1], [2], [3]]
+
+// Empty array
+chunk([], 2)
+// []
+
+// Size larger than array
+chunk([1, 2], 5)
+// [[1, 2]]
+
+// Size of 1 (explicit)
+chunk([1, 2, 3, 4], 1)
+// [[1], [2], [3], [4]]
+```
+
+## Real-World Use Cases
+
+### 1. Pagination
+
+```typescript
+const items = getItemsFromDB(); // 1000 items
+const pageSize = 20;
+const pages = chunk(items, pageSize);
+
+pages.forEach((page, index) => {
+  console.log(`Page ${index + 1}: ${page.length} items`);
+});
+```
+
+### 2. Grid Display
+
+```typescript
+const products = [...]; // Array of products
+const columns = 4;
+const rows = chunk(products, columns);
+
+rows.forEach(row => {
+  displayRowInGrid(row);
+});
+```
+
+### 3. Batch API Requests
+
+```typescript
+const ids = [1, 2, 3, ..., 1000];
+const batchSize = 100;
+const batches = chunk(ids, batchSize);
+
+for (const batch of batches) {
+  await sendBatchRequest(batch);
+}
+```
+
+### 4. CSV Row Processing
+
+```typescript
+const data = [...]; // Flat array of values
+const columns = 5;
+const rows = chunk(data, columns);
+
+rows.forEach(row => {
+  writeRowToCSV(row);
+});
+```
+
+## Time & Space Complexity
+
+- **Time Complexity**: O(n) - visits each element once
+- **Space Complexity**: O(n) - stores all elements in result array
+
+## Important Notes
+
+- ⚠️ Original array is **not modified**
+- ✅ Works with any data type (numbers, strings, objects, mixed)
+- ✅ `size` parameter must be >= 1
+- ✅ Default `size` is 1 (each element becomes its own chunk)
+- ✅ Empty array returns `[]`
+
+## Performance Considerations
+
+- The `slice()` approach creates new sub-arrays but is more readable
+- For very large arrays, consider streaming/chunking on-demand
+- Memory usage is proportional to input array size
+
+## Resources
+
+- [Array.prototype.slice - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice)
+- [Lodash _.chunk](https://lodash.com/docs/#chunk)

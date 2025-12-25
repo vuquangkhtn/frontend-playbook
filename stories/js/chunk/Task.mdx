@@ -1,0 +1,48 @@
+---
+title: Chunk
+---
+
+# chunk()
+
+Implement a function `chunk(array, [size=1])` that splits an input array into groups of a specified length and returns them in a new array. If the array can't be split evenly, the final chunk contains the remaining elements. The function should not modify the original input array.
+
+## Function Signature
+
+```ts
+function chunk<T>(array: Array<T>, size?: number): Array<Array<T>>
+```
+
+## Parameters
+
+- **array** `(Array)`: The array to process
+- **[size=1]** `(number)`: The length of each chunk (default: 1)
+
+## Returns
+
+`(Array)`: A new array of chunks
+
+## Examples
+
+```ts
+chunk(['a', 'b', 'c', 'd']);           // [['a'], ['b'], ['c'], ['d']]
+chunk([1, 2, 3, 4], 2);                // [[1, 2], [3, 4]]
+chunk([1, 2, 3, 4], 3);                // [[1, 2, 3], [4]]
+chunk([1, 2, 3, 4, 5, 6, 7, 8], 3);    // [[1, 2, 3], [4, 5, 6], [7, 8]]
+```
+
+## Key Requirements
+
+- ✅ Returns an empty array if the input array is empty
+- ✅ Handles remainder elements in the final chunk
+- ✅ Does not modify the original array
+- ✅ Works with any data type
+- ✅ Default size is 1
+
+## Constraints
+
+- `size >= 1`
+- `0 <= length of array <= 100`
+
+## Resources
+
+- [Lodash _.chunk](https://lodash.com/docs/#chunk)
