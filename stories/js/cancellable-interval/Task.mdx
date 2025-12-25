@@ -1,0 +1,47 @@
+---
+title: Cancellable Interval
+---
+
+# setCancellableInterval
+
+Implement a function `setCancellableInterval()` that acts like the native `setInterval()` but returns a cancel function instead of a timer ID. This provides a cleaner, more functional API for managing intervals.
+
+The function should have the exact same signature as `setInterval()`:
+
+```ts
+setCancellableInterval(callback);
+setCancellableInterval(callback, delay);
+setCancellableInterval(callback, delay, param1);
+setCancellableInterval(callback, delay, param1, param2);
+setCancellableInterval(callback, delay, param1, param2, /* …, */ paramN);
+```
+
+## Examples
+
+```ts
+let i = 0;
+
+// t = 0: Start the interval
+const cancel = setCancellableInterval(() => {
+  i++;
+}, 10);
+
+// t = 10: i is 1
+// t = 20: i is 2
+// t = 25: Call cancel()
+cancel();
+
+// t = 30: i is still 2 because interval was cancelled
+```
+
+## Key Requirements
+
+- ✅ Return a function that cancels the interval
+- ✅ Support all `setInterval()` parameters
+- ✅ Pass additional arguments to the callback
+- ✅ Use default delay of 0 if not specified
+
+## Resources
+
+- [setInterval on MDN](https://developer.mozilla.org/en-US/docs/Web/API/setInterval)
+- [clearInterval on MDN](https://developer.mozilla.org/en-US/docs/Web/API/clearInterval)

@@ -1,0 +1,148 @@
+---
+title: setCancellableInterval — Solution
+---
+
+## Solution Explanation
+
+The key insight is that instead of returning a timer ID (like `setInterval` does), we return a closure function that calls `clearInterval()` on the timer ID. This abstracts away the interval mechanism and provides a cleaner functional API.
+
+## Simple Solution
+
+```typescript
+export default function setCancellableInterval(
+  callback: Function,
+  delay?: number,
+  ...args: Array<any>
+): () => void {
+  const timerId = setInterval(callback, delay ?? 0, ...args);
+
+  return () => {
+    clearInterval(timerId);
+  };
+}
+```
+
+## Using Rest Parameters for Complete Forwarding
+
+An even more elegant approach forwards all arguments directly to `setInterval()`:
+
+```typescript
+export default function setCancellableInterval(...args: any[]): () => void {
+  const timerId = setInterval(...args);
+
+  return () => {
+    clearInterval(timerId);
+  };
+}
+```
+
+## How It Works
+
+1. **Create interval**: Call `setInterval()` with all provided parameters
+2. **Store timer ID**: Save the returned timer ID in a variable
+3. **Return cancel function**: Return a closure that calls `clearInterval()` with the timer ID
+4. **Cancellation**: When the returned function is called, it clears the interval
+
+## Step-by-Step Example
+
+```typescript
+// Setup
+let count = 0;
+const cancel = setCancellableInterval(() => {
+  count++;
+  console.log('Count:', count);
+}, 1000);
+
+// Timeline:
+// t=0ms: Interval starts
+// t=1000ms: callback runs, count = 1, logs "Count: 1"
+// t=2000ms: callback runs, count = 2, logs "Count: 2"
+// t=2500ms: cancel() is called
+// t=3000ms: Interval is cancelled, callback does NOT run
+```
+
+## With Additional Arguments
+
+```typescript
+const multiply = (a: number, b: number) => {
+  console.log(`${a} × ${b} = ${a * b}`);
+};
+
+const cancel = setCancellableInterval(multiply, 1000, 5, 3);
+
+// Logs: "5 × 3 = 15" every 1000ms
+// Call cancel() to stop
+cancel();
+```
+
+## Common Pattern: Approach 2 (Non-Optimal)
+
+Another approach maintains a `cancelled` flag:
+
+```typescript
+export default function setCancellableInterval(
+  callback: Function,
+  delay?: number,
+  ...args: Array<any>
+): () => void {
+  let cancelled = false;
+
+  setInterval(() => {
+    if (cancelled) {
+      return; // Don't execute callback
+    }
+    callback(...args);
+  }, delay);
+
+  return () => {
+    cancelled = true;
+  };
+}
+```
+
+### Why This Approach Is Non-Optimal
+
+- ❌ The `setInterval()` callback still runs every interval, just doesn't do anything
+- ❌ Wastes CPU cycles checking the `cancelled` flag indefinitely
+- ❌ Creates memory overhead compared to actual cancellation
+
+**Use the first approach** with `clearInterval()` for proper resource cleanup.
+
+## Advantages Over Native setInterval
+
+| Aspect | setInterval | setCancellableInterval |
+|--------|-------------|------------------------|
+| Cancel mechanism | `clearInterval(id)` | `cancel()` |
+| API style | Imperative (ID-based) | Functional (closure-based) |
+| Encapsulation | None | Encapsulated in closure |
+| Memory cleanup | Manual ID tracking | Automatic via closure |
+| React-friendly | Less intuitive | Perfect for useEffect cleanup |
+
+## React Integration Example
+
+```typescript
+useEffect(() => {
+  const cancel = setCancellableInterval(() => {
+    fetchData();
+  }, 5000);
+
+  return () => cancel(); // Cleanup function
+}, []);
+```
+
+Perfect for cleanup functions because:
+- ✅ Return the cancel function directly
+- ✅ No need to store IDs
+- ✅ Clear intention of cancellation
+
+## Important Notes
+
+- ⚠️ `setInterval()` doesn't support `thisArg` parameter, unlike many Array methods
+- ✅ This function properly forwards all arguments via the spread operator
+- ✅ Default delay of 0 is used if delay is undefined (matches setInterval behavior)
+
+## Resources
+
+- [setInterval - MDN](https://developer.mozilla.org/en-US/docs/Web/API/setInterval)
+- [clearInterval - MDN](https://developer.mozilla.org/en-US/docs/Web/API/clearInterval)
+- [Closures in JavaScript - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)

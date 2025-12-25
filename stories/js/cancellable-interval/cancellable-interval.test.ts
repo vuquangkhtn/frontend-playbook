@@ -1,4 +1,4 @@
-import setCancellableInterval from './cancellable-interval';
+import setCancellableInterval from './cancellable-interval.solution';
 
 describe('setCancellableInterval', () => {
   test('returns a function', () => {
