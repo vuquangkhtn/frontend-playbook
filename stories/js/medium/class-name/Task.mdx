@@ -1,38 +1,77 @@
-classnames is a commonly-used utility in modern front end applications to conditionally join CSS class names together. If you've written React applications, you likely have used a similar library.
+---
+title: classNames
+---
 
-Implement the classnames function.
+# classNames()
 
-Examples
+Implement the `classNames()` function, a commonly-used utility in modern front-end applications to conditionally join CSS class names together. This function is widely used in React applications and frameworks to manage dynamic class names.
 
-classNames('foo', 'bar'); // 'foo bar'
-classNames('foo', { bar: true }); // 'foo bar'
-classNames({ 'foo-bar': true }); // 'foo-bar'
-classNames({ 'foo-bar': false }); // ''
-classNames({ foo: true }, { bar: true }); // 'foo bar'
-classNames({ foo: true, bar: true }); // 'foo bar'
-classNames({ foo: true, bar: false, qux: true }); // 'foo qux'
-Arrays will be recursively flattened as per the rules above.
+## Function Signature
 
+```ts
+function classNames(...args: Array<ClassValue>): string
+```
 
-classNames('a', ['b', { c: true, d: false }]); // 'a b c'
-Values can be mixed.
+## Types
 
+```ts
+type ClassValue = ClassArray | ClassDictionary | string | number | null | boolean | undefined;
+type ClassDictionary = Record<string, any>;
+type ClassArray = Array<ClassValue>;
+```
 
-classNames(
-  'foo',
-  {
-    bar: true,
-    duck: false,
-  },
-  'baz',
-  { quux: true },
-); // 'foo bar baz quux'
-Falsey values are ignored.
+## Features
 
+- ✅ Accepts strings, objects, arrays, and numbers
+- ✅ Recursively flattens nested arrays
+- ✅ Filters out falsey values (null, undefined, false, 0, '')
+- ✅ Includes object keys with truthy values
+- ✅ Returns space-separated string with no extra whitespace
 
-classNames(null, false, 'bar', undefined, { baz: null }, ''); // 'bar'
-In addition, the returned string should not have any leading or trailing whitespace.
+## Examples
 
-Resources
-classnames library on GitHub
-clsx library on GitHub: A newer version which serves as a faster and smaller drop-in replacement for classnames.
+### Strings
+```ts
+classNames('foo', 'bar');                    // 'foo bar'
+classNames('text', 'large', 'bold');         // 'text large bold'
+```
+
+### Objects
+```ts
+classNames({ 'foo-bar': true });             // 'foo-bar'
+classNames({ 'foo-bar': false });            // ''
+classNames({ foo: true, bar: false });       // 'foo'
+classNames({ foo: true }, { bar: true });    // 'foo bar'
+```
+
+### Mixed
+```ts
+classNames('foo', { bar: true });            // 'foo bar'
+classNames('foo', { bar: true, baz: false }, 'qux'); // 'foo bar qux'
+```
+
+### Arrays
+```ts
+classNames(['foo', 'bar']);                  // 'foo bar'
+classNames('a', ['b', { c: true }]);         // 'a b c'
+classNames(['a', ['b', ['c']]]);             // 'a b c' (nested arrays flattened)
+```
+
+### Falsey Values
+```ts
+classNames(null, false, 'bar', undefined);   // 'bar'
+classNames('foo', false && 'bar', 0, '');    // 'foo'
+```
+
+## Use Cases
+
+- **React Components**: Conditionally apply CSS classes based on props
+- **Dynamic Styling**: Build class names based on component state
+- **Theme Switching**: Toggle between theme classes
+- **Responsive Design**: Apply classes based on breakpoints
+- **Accessibility**: Add aria classes conditionally
+
+## Resources
+
+- [classnames on GitHub](https://github.com/JedWatson/classnames)
+- [clsx on GitHub](https://github.com/lukeed/clsx) - A faster alternative
