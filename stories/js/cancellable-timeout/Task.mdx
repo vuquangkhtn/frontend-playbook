@@ -1,0 +1,55 @@
+---
+title: Cancellable Timeout
+---
+
+# setCancellableTimeout
+
+Implement a function `setCancellableTimeout()` that acts like the native `setTimeout()` but returns a cancel function instead of a timer ID. This provides a cleaner, more functional API for managing delayed operations.
+
+The function should have the exact same signature as `setTimeout()`:
+
+```ts
+setCancellableTimeout(callback);
+setCancellableTimeout(callback, delay);
+setCancellableTimeout(callback, delay, param1);
+setCancellableTimeout(callback, delay, param1, param2);
+setCancellableTimeout(callback, delay, param1, param2, /* …, */ paramN);
+```
+
+## Examples
+
+```ts
+let i = 0;
+
+// t = 0: Schedule timeout
+const cancel = setCancellableTimeout(() => {
+  i++;
+}, 100);
+
+// t = 50: Cancel before execution
+cancel();
+
+// t = 100: i is still 0 because timeout was cancelled
+```
+
+## Key Characteristics
+
+- ✅ Returns a cancellation function instead of a timer ID
+- ✅ Executes callback only once, after the specified delay
+- ✅ Supports all `setTimeout()` parameters
+- ✅ Passes additional arguments to the callback
+- ✅ Can be cancelled at any time before execution
+
+## Differences from setInterval
+
+| Feature | setTimeout | setInterval |
+|---------|-----------|------------|
+| Execution | Once, after delay | Repeatedly at interval |
+| Returns | Timer ID | Timer ID |
+| Typical Duration | Seconds to minutes | Long-running |
+| Use Case | One-time delayed action | Repeated periodic action |
+
+## Resources
+
+- [setTimeout on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout)
+- [clearTimeout on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/clearTimeout)

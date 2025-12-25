@@ -1,4 +1,4 @@
-import setCancellableTimeout from './cancellable-timeout';
+import setCancellableTimeout from './cancellable-timeout.solution';
 
 describe('setCancellableTimeout', () => {
   test('returns a function', () => {

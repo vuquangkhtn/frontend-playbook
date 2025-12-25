@@ -1,0 +1,203 @@
+---
+title: setCancellableTimeout — Solution
+---
+
+## Solution Explanation
+
+The implementation is identical in concept to `setCancellableInterval`, but for a one-time delayed execution instead of repeated intervals. We return a closure function that calls `clearTimeout()` on the stored timer ID.
+
+## Simple Solution
+
+```typescript
+export default function setCancellableTimeout(
+  callback: Function,
+  delay?: number,
+  ...args: Array<any>
+): () => void {
+  const timerId = setTimeout(callback, delay, ...args);
+
+  return () => {
+    clearTimeout(timerId);
+  };
+}
+```
+
+## Using Rest Parameters for Complete Forwarding
+
+Forward all arguments directly to `setTimeout()` for maximum flexibility:
+
+```typescript
+export default function setCancellableTimeout(...args: any[]): () => void {
+  const timerId = setTimeout(...args);
+
+  return () => {
+    clearTimeout(timerId);
+  };
+}
+```
+
+## How It Works
+
+1. **Create timeout**: Call `setTimeout()` with all provided parameters
+2. **Store timer ID**: Save the returned timer ID in a variable
+3. **Return cancel function**: Return a closure that calls `clearTimeout()` with the timer ID
+4. **Cancellation**: When the returned function is called, it clears the timeout before execution
+
+## Step-by-Step Example
+
+```typescript
+// Setup
+const cancel = setCancellableTimeout(() => {
+  console.log('Executed!');
+}, 1000);
+
+// Timeline:
+// t=0ms: Timeout is scheduled
+// t=500ms: cancel() is called
+// t=1000ms: Timeout was cancelled, callback does NOT run
+```
+
+## With Additional Arguments
+
+```typescript
+const greet = (greeting: string, name: string) => {
+  console.log(`${greeting}, ${name}!`);
+};
+
+const cancel = setCancellableTimeout(greet, 2000, 'Hello', 'Alice');
+
+// After 2 seconds: logs "Hello, Alice!"
+// Call cancel() before 2 seconds to prevent execution
+cancel();
+```
+
+## Common Pattern: Approach 2 (Non-Optimal)
+
+An alternative using a `cancelled` flag:
+
+```typescript
+export default function setCancellableTimeout(
+  callback: Function,
+  delay?: number,
+  ...args: Array<any>
+): () => void {
+  let cancelled = false;
+
+  setTimeout(() => {
+    if (cancelled) {
+      return; // Don't execute callback
+    }
+    callback(...args);
+  }, delay);
+
+  return () => {
+    cancelled = true;
+  };
+}
+```
+
+### Why This Approach Is Non-Optimal
+
+- ❌ The `setTimeout()` callback still runs and wastes CPU cycles checking the flag
+- ❌ No actual cleanup of the timer occurs
+- ❌ Less efficient than using `clearTimeout()`
+
+**Use the first approach** with `clearTimeout()` for proper resource management.
+
+## Real-World Use Cases
+
+### 1. Debouncing User Input
+
+```typescript
+let debounceCancel: (() => void) | null = null;
+
+function onUserInput(value: string) {
+  // Cancel previous timeout
+  if (debounceCancel) debounceCancel();
+
+  // Set new timeout
+  debounceCancel = setCancellableTimeout(() => {
+    handleSearch(value);
+  }, 500);
+}
+```
+
+### 2. Dismissible Notifications
+
+```typescript
+const showNotification = (message: string) => {
+  const dismiss = () => {
+    console.log('Notification dismissed');
+  };
+
+  const autoHide = setCancellableTimeout(() => {
+    dismiss();
+  }, 3000);
+
+  return autoHide; // User can call to dismiss early
+};
+```
+
+### 3. Undo Action with Window
+
+```typescript
+let undoCancel: (() => void) | null = null;
+
+function deleteItem(id: number) {
+  showUndoNotification();
+
+  // Auto-delete after 5 seconds unless undo is clicked
+  undoCancel = setCancellableTimeout(() => {
+    permanentlyDelete(id);
+  }, 5000);
+}
+
+function undo() {
+  if (undoCancel) {
+    undoCancel(); // Prevent deletion
+    hideUndoNotification();
+  }
+}
+```
+
+### 4. React useEffect Cleanup
+
+```typescript
+useEffect(() => {
+  const cancel = setCancellableTimeout(() => {
+    setData(fetchedData);
+  }, 1000);
+
+  return () => cancel(); // Cleanup on unmount
+}, []);
+```
+
+## Comparison: setTimeout vs setCancellableTimeout
+
+| Aspect | setTimeout | setCancellableTimeout |
+|--------|-----------|------------------------|
+| Return value | Number (timer ID) | Function |
+| Cancel mechanism | `clearTimeout(id)` | `cancel()` |
+| API style | Imperative | Functional |
+| Encapsulation | None | Encapsulated in closure |
+| Memory management | Manual ID tracking | Automatic |
+| React-friendly | Less intuitive | Perfect for cleanup |
+
+## Important Notes
+
+- ⚠️ `setTimeout()` doesn't support `thisArg` parameter
+- ✅ This function properly forwards all arguments via spread operator
+- ✅ Default delay of 0 is used if delay is undefined
+- ✅ Ideal for use with React hooks and async operations
+
+## Performance Considerations
+
+- **Immediate cancellation**: Frees resources instantly
+- **Never cancelled**: No performance penalty vs native `setTimeout()`
+- **Memory**: Closure captures timerId but releases when cancelled/executed
+
+## Resources
+
+- [setTimeout - MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout)
+- [clearTimeout - MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/clearTimeout)
+- [Closures in JavaScript - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
