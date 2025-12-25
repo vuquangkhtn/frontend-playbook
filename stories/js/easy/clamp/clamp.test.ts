@@ -1,4 +1,4 @@
-import clamp from './clamp';
+import clamp from './clamp.solution';
 
 describe('clamp', () => {
   describe('within range', () => {
