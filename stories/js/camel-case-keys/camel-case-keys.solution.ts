@@ -1,10 +1,11 @@
 function camelize(str) {
   return str.toLowerCase()
-    .replace(/([-_][a-z0-9])/g, group =>
-      group
+    .replace(/([-_][a-z0-9])/g, (group) =>
+    {
+      return group
         .toUpperCase()
-        .replace('-', '')
-        .replace('_', '')
+        .replace(/[-_]/g, '')
+    }
     );
 }
 
