@@ -1,4 +1,4 @@
-import classNames from './classnames-ii';
+import classNames from './class-name-ii.solution';
 
 describe('classNames', () => {
   test('empty values', () => {
