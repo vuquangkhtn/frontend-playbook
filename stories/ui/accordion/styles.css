@@ -15,3 +15,13 @@ body {
 .accordion-icon--rotated {
   transform: translateY(2px) rotate(-135deg);
 }
+
+.accordion-body--collapse {
+  /* height: 0; */
+  visibility: collapse;
+}
+
+.accordion-body--expand {
+  /* height: fit-content; */
+  visibility: visible;
+}
