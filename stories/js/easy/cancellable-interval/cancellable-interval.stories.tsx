@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { useState, useEffect } from 'react';
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { useState, useEffect } from "react";
 
 // Import the solution to register the function
 const setCancellableInterval = (
@@ -56,62 +56,74 @@ const Demo = () => {
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'monospace' }}>
+    <div style={{ padding: "20px", fontFamily: "monospace" }}>
       <h2>setCancellableInterval Demo</h2>
 
-      <section style={{ marginBottom: '30px' }}>
+      <section style={{ marginBottom: "30px" }}>
         <h3>What is setCancellableInterval?</h3>
         <p>
-          <code>setCancellableInterval()</code> is a wrapper around the native 
-          <code>setInterval()</code> that returns a cancel function instead of a timer ID. 
-          This provides a cleaner, more object-oriented API for managing intervals.
+          <code>setCancellableInterval()</code> is a wrapper around the native
+          <code>setInterval()</code> that returns a cancel function instead of a
+          timer ID. This provides a cleaner, more object-oriented API for
+          managing intervals.
         </p>
       </section>
 
-      <section style={{ marginBottom: '30px' }}>
+      <section style={{ marginBottom: "30px" }}>
         <h3>Interactive Example</h3>
-        <div style={{ padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginBottom: '15px' }}>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '8px' }}>
+        <div
+          style={{
+            padding: "15px",
+            backgroundColor: "#f9f9f9",
+            borderRadius: "4px",
+            marginBottom: "15px",
+          }}
+        >
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "8px" }}>
               <strong>Interval Delay (ms):</strong>
               <input
                 type="number"
                 value={delay}
-                onChange={(e) => setDelay(Math.max(100, Number(e.target.value)))}
+                onChange={(e) =>
+                  setDelay(Math.max(100, Number(e.target.value)))
+                }
                 disabled={isRunning}
-                style={{ marginLeft: '10px', padding: '4px', width: '100px' }}
+                style={{ marginLeft: "10px", padding: "4px", width: "100px" }}
               />
             </label>
           </div>
 
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '8px' }}>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "8px" }}>
               <strong>Auto-cancel after (iterations):</strong>
               <input
                 type="number"
-                value={cancelAt ?? ''}
-                onChange={(e) => setCancelAt(e.target.value ? Number(e.target.value) : null)}
+                value={cancelAt ?? ""}
+                onChange={(e) =>
+                  setCancelAt(e.target.value ? Number(e.target.value) : null)
+                }
                 disabled={isRunning}
                 placeholder="Leave empty for manual cancel"
-                style={{ marginLeft: '10px', padding: '4px', width: '150px' }}
+                style={{ marginLeft: "10px", padding: "4px", width: "150px" }}
               />
             </label>
-            <p style={{ color: '#666', fontSize: '12px', margin: '5px 0 0 0' }}>
+            <p style={{ color: "#666", fontSize: "12px", margin: "5px 0 0 0" }}>
               Leave empty to cancel manually using the button
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: "flex", gap: "10px" }}>
             <button
               onClick={startInterval}
               disabled={isRunning}
               style={{
-                padding: '8px 16px',
-                backgroundColor: isRunning ? '#ccc' : '#4CAF50',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: isRunning ? 'not-allowed' : 'pointer',
+                padding: "8px 16px",
+                backgroundColor: isRunning ? "#ccc" : "#4CAF50",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: isRunning ? "not-allowed" : "pointer",
               }}
             >
               Start Interval
@@ -120,12 +132,12 @@ const Demo = () => {
               onClick={stopInterval}
               disabled={!isRunning}
               style={{
-                padding: '8px 16px',
-                backgroundColor: !isRunning ? '#ccc' : '#f44336',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: !isRunning ? 'not-allowed' : 'pointer',
+                padding: "8px 16px",
+                backgroundColor: !isRunning ? "#ccc" : "#f44336",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: !isRunning ? "not-allowed" : "pointer",
               }}
             >
               Cancel Interval
@@ -133,12 +145,12 @@ const Demo = () => {
             <button
               onClick={reset}
               style={{
-                padding: '8px 16px',
-                backgroundColor: '#2196F3',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
+                padding: "8px 16px",
+                backgroundColor: "#2196F3",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
               }}
             >
               Reset
@@ -146,21 +158,35 @@ const Demo = () => {
           </div>
         </div>
 
-        <div style={{ padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '4px' }}>
-          <p style={{ margin: '0 0 10px 0' }}>
-            <strong>Counter:</strong> <span style={{ fontSize: '28px', color: '#2e7d32' }}>{count}</span>
+        <div
+          style={{
+            padding: "15px",
+            backgroundColor: "#e8f5e9",
+            borderRadius: "4px",
+          }}
+        >
+          <p style={{ margin: "0 0 10px 0" }}>
+            <strong>Counter:</strong>{" "}
+            <span style={{ fontSize: "28px", color: "#2e7d32" }}>{count}</span>
           </p>
-          <p style={{ margin: '0', color: '#666', fontSize: '12px' }}>
-            Status: <strong>{isRunning ? '⏱️ Running' : '⏸️ Stopped'}</strong>
+          <p style={{ margin: "0", color: "#666", fontSize: "12px" }}>
+            Status: <strong>{isRunning ? "⏱️ Running" : "⏸️ Stopped"}</strong>
           </p>
         </div>
       </section>
 
-      <section style={{ marginBottom: '30px' }}>
+      <section style={{ marginBottom: "30px" }}>
         <h3>Code Example</h3>
-        <div style={{ padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '4px', overflow: 'auto' }}>
-          <pre style={{ margin: '0', fontSize: '12px' }}>
-{`let counter = 0;
+        <div
+          style={{
+            padding: "12px",
+            backgroundColor: "#f5f5f5",
+            borderRadius: "4px",
+            overflow: "auto",
+          }}
+        >
+          <pre style={{ margin: "0", fontSize: "12px" }}>
+            {`let counter = 0;
 
 const cancel = setCancellableInterval(() => {
   counter++;
@@ -173,13 +199,27 @@ cancel();`}
         </div>
       </section>
 
-      <section style={{ marginBottom: '30px' }}>
+      <section style={{ marginBottom: "30px" }}>
         <h3>Comparison: setInterval vs setCancellableInterval</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          <div style={{ padding: '12px', backgroundColor: '#fff3e0', borderRadius: '4px' }}>
-            <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>setInterval (Native)</p>
-            <pre style={{ margin: '0', fontSize: '11px' }}>
-{`const id = setInterval(() => {
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "15px",
+          }}
+        >
+          <div
+            style={{
+              padding: "12px",
+              backgroundColor: "#fff3e0",
+              borderRadius: "4px",
+            }}
+          >
+            <p style={{ margin: "0 0 10px 0", fontWeight: "bold" }}>
+              setInterval (Native)
+            </p>
+            <pre style={{ margin: "0", fontSize: "11px" }}>
+              {`const id = setInterval(() => {
   doSomething();
 }, 1000);
 
@@ -187,10 +227,18 @@ cancel();`}
 clearInterval(id);`}
             </pre>
           </div>
-          <div style={{ padding: '12px', backgroundColor: '#e3f2fd', borderRadius: '4px' }}>
-            <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>setCancellableInterval</p>
-            <pre style={{ margin: '0', fontSize: '11px' }}>
-{`const cancel = setCancellableInterval(() => {
+          <div
+            style={{
+              padding: "12px",
+              backgroundColor: "#e3f2fd",
+              borderRadius: "4px",
+            }}
+          >
+            <p style={{ margin: "0 0 10px 0", fontWeight: "bold" }}>
+              setCancellableInterval
+            </p>
+            <pre style={{ margin: "0", fontSize: "11px" }}>
+              {`const cancel = setCancellableInterval(() => {
   doSomething();
 }, 1000);
 
@@ -201,23 +249,28 @@ cancel();`}
         </div>
       </section>
 
-      <section style={{ marginBottom: '30px' }}>
+      <section style={{ marginBottom: "30px" }}>
         <h3>Real-World Use Cases</h3>
         <ul>
           <li>
-            <strong>Polling API Data:</strong> Fetch data at regular intervals and cancel when component unmounts
+            <strong>Polling API Data:</strong> Fetch data at regular intervals
+            and cancel when component unmounts
           </li>
           <li>
-            <strong>Game Loops:</strong> Run game updates at fixed intervals, stopping when game ends
+            <strong>Game Loops:</strong> Run game updates at fixed intervals,
+            stopping when game ends
           </li>
           <li>
-            <strong>Auto-save:</strong> Periodically save user data and stop when the session ends
+            <strong>Auto-save:</strong> Periodically save user data and stop
+            when the session ends
           </li>
           <li>
-            <strong>Animation Loops:</strong> Animate UI elements and stop when animation completes
+            <strong>Animation Loops:</strong> Animate UI elements and stop when
+            animation completes
           </li>
           <li>
-            <strong>Countdown Timers:</strong> Run countdown and auto-cancel when reaching zero
+            <strong>Countdown Timers:</strong> Run countdown and auto-cancel
+            when reaching zero
           </li>
         </ul>
       </section>
@@ -227,8 +280,13 @@ cancel();`}
         <ul>
           <li>✅ Cleaner API: Returns a function instead of a numeric ID</li>
           <li>✅ Encapsulation: Timer management is abstracted away</li>
-          <li>✅ Easier to understand: More intuitive function-based cancellation</li>
-          <li>✅ Supports all setInterval parameters including additional arguments</li>
+          <li>
+            ✅ Easier to understand: More intuitive function-based cancellation
+          </li>
+          <li>
+            ✅ Supports all setInterval parameters including additional
+            arguments
+          </li>
           <li>✅ Compatible with React hooks (useEffect cleanup)</li>
         </ul>
       </section>
@@ -237,8 +295,8 @@ cancel();`}
 };
 
 const meta = {
-  title: 'JS/setCancellableInterval',
-  tags: ['!autodocs'],
+  title: "JS/easy/setCancellableInterval",
+  tags: ["!autodocs"],
   component: Demo,
 } satisfies Meta<typeof Demo>;
 
@@ -248,6 +306,6 @@ type Story = StoryObj<typeof meta>;
 export const Docs: Story = {};
 
 export const DemoStory: Story = {
-  name: 'Demo',
+  name: "Demo",
   render: () => <Demo />,
 };
